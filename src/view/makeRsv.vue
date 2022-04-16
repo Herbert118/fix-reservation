@@ -71,6 +71,7 @@ export default defineComponent({
     }
     const logout = ()=>{
       store.commit("setUserAuth","")
+      router.push("/user/login")
     }
 
     return {

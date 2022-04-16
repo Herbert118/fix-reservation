@@ -9,62 +9,62 @@
       :label-col="{ span: 8 }"
       :wrapper-col="{ span: 16 }"
     >
-      <a-form-item name="email" label="学生邮箱">
+      <a-form-item
+        name="email"
+        label="学生邮箱" 
+      >
         <a-input v-model:value="userInfo.stuEmail"></a-input>
       </a-form-item>
+
       <a-form-item :wrapper-col="{ offset: 9, span: 13 }">
-        <a-button type="primary" htmlType="submit"  block>确定</a-button>
+        <a-button type="primary" htmlType="submit" block>确定</a-button>
       </a-form-item>
+
     </a-form>
   </div>
 </template>
 
 <script>
 import { defineComponent, onMounted, reactive } from "vue";
-import { useStore } from "vuex";
-import router from "../router"
-import {useRouter} from 'vue-router'
-import axios from "axios"
-import { message } from 'ant-design-vue';
+import axios from "axios";
+import { message } from "ant-design-vue";
 export default defineComponent({
   props: {},
   setup() {
-    const store = useStore();
-    const router2 = useRouter()
+
     //data
     const userInfo = reactive({
-      stuEmail: "a@a.com",
+      stuEmail: "20206824@stu.neu.edu.cn",
     });
     //method
     const userLogin = (values) => {
       console.log(values);
 
-      const url =  `${process.env.VUE_APP_BACK_END_HOST}/api/userLogin`
+      const url = `${process.env.VUE_APP_BACK_END_HOST}/api/userLogin`;
       const payload = {
-        email:userInfo.stuEmail
-        }
+        email: userInfo.stuEmail,
+      };
 
       axios
-      .post(url,payload,{
+        .post(url, payload, {
           headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
         })
-      .then((res)=>{
-        store.commit("setUserAuth",res.token) 
-        router.push("/user/makeRsv")
-      })
-      .catch((e)=>{
-        console.log(e)
-        message.warning(e)
-      })
+        .then((res) => {
+          console.log(res.data);
+          message.info("邮件已发送");
+        })
+        .catch((e) => {
+          console.log(e);
+          message.warning(e);
+        });
     };
 
     //hook
-    onMounted(()=>{
-      console.log(router2.currentRoute.value);
-      alert("fuxxk")
-    })
+    onMounted(() => {
+
+    });
 
     return {
       userInfo,

@@ -73,7 +73,7 @@ const routes = [
     },
     {
         "path":"/",
-        "redirect":"/admin/login"
+        "redirect":"/user/login"
     },
     {
         "path":"/admin",

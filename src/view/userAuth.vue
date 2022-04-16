@@ -1,5 +1,5 @@
 <template>
-    <div>正在验证</div>
+    <div>正在验证...</div>
 </template>
 <script>
 import { defineComponent,onMounted } from 'vue'
