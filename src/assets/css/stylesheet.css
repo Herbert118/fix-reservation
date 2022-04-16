@@ -1,0 +1,12 @@
+div.page{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: calc(70vh);
+    width: clac(70vw);
+    margin-right: calc(10vw);
+  }
+  .ant-page-header{
+    border: solid 1px gainsboro;
+  }
