@@ -13,8 +13,8 @@
     :wrapper-col="{ span: 16 }"
     
     autocomplete="off"
-    @finish="onFinish"
-    @finishFailed="onFinishFailed"
+    @finish="submitRsv"
+    @finishFailed="submitRsvFailed"
   >
   
     <a-form-item
@@ -47,28 +47,55 @@
 
 <script>
 import { defineComponent, reactive } from "vue";
+import {useStore} from "vuex"
+import {message} from "ant-design-vue"
+import {axios} from "axios"
+import router from "../router"
 export default defineComponent({
   props: {},
   setup() {
+    const baseUrl = process.env.VUE_APP_BASEURL
+    const store = useStore()
+
     //data
     const rsvInfo = reactive({
       model: "",
       question: "",
     });
     //method
-    const onFinish = (values) => {
-      console.log("Success:", values);
+    const submitRsv = () => {
+      const url = baseUrl+"/api/rsv"
+      const sesID = router.currentRoute.value.query
+      const token=store.state.userAuth
+      const payload = {
+        ...rsvInfo,
+        sesID
+      }
+      axios
+      .post(url,payload,{
+        headers:{
+          Authorization:`${token}`
+        }
+      })
+      .then((res)=>{
+        message.info(res.msg)
+        router.push("/user/makeRsv")
+      })
+      .catch((e)=>{
+        message.warning(e)
+      })
+      
     };
 
-    const onFinishFailed = (errorInfo) => {
+    const submitRsvFailed = (errorInfo) => {
       console.log("Failed:", errorInfo);
     };
 
 //return
     return {
       rsvInfo,
-      onFinish,
-      onFinishFailed,
+      submitRsv,
+      submitRsvFailed,
     };
   },
 });

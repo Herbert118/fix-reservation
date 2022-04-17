@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, } from "vue";
+import { defineComponent, ref, onMounted} from "vue";
 import router from "../router"
 import store from "../store"
 export default defineComponent({
@@ -78,10 +78,6 @@ export default defineComponent({
       }
     ];
 
-    //method
-    const onMounted = () => {
-        //get sessions
-    };
     const onDelete = (key) => {
       sessions.value = sessions.value.filter((item) => item.key !== key);
     };
@@ -93,11 +89,13 @@ export default defineComponent({
       store.commit("setAdminAuth","")
       router.push("/admin/login")
     }
-
+  //hook
+    onMounted(()=>{
+      
+    })
     return {
       sessions,
       columns,
-      onMounted,
       onDelete,
       handleAdd,
      logout,

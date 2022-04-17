@@ -11,11 +11,14 @@ export default defineComponent({
         const store = useStore();
         //hook
         onMounted(()=>{
-            if(router.currentRoute.value.query.token){
-                 const url =  `${process.env.VUE_APP_BACK_END_HOST}/api/userAuth`
+            let token = router.currentRoute.value.query.token
+            if(token){
+                 const url =  `${process.env.VUE_APP_BASEURL}/api/userAuth`
                 axios
-                .post(url,{
-                    token:router.currentRoute.value.query.token
+                .get(url,{
+                    headers:{
+                        Authorization:`${token}`
+                    }
                 })
                 .then(()=>{
                     store.commit("setUserAuth",router.currentRoute.value.query.token);

@@ -70,10 +70,15 @@
 
 <script>
 import { defineComponent, reactive,onMounted } from "vue";
+import {useStore} from "vuex"
+import {message} from "ant-design-vue"
+import {axios} from "axios"
 import router from "../router"
 export default defineComponent({
   props: {},
   setup() {
+    const store = useStore()
+    const baseUrl = process.env.VUE_APP_BASEURL
     //data
     const sesInfo = reactive({
       position: "",
@@ -91,7 +96,27 @@ export default defineComponent({
     };
     //hook
     onMounted(() =>{
-      
+      const url = baseUrl + "/api/ses"
+      const token = store.state.adminAuth
+      const payload = {
+        ...sesInfo,
+        token,
+
+      }
+      axios
+      .post(url,payload,{
+        headers:{
+          Authorization:`${token}`
+        }
+        
+      })
+      .then((res)=>{
+        message.info(res.data.msg)
+      })
+      .catch((e)=>{
+        message.warn(e)
+        console.log(e)
+      })
       console.log(router.currentRoute.value);
     })
 

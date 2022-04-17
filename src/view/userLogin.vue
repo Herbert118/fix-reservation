@@ -40,7 +40,7 @@ export default defineComponent({
     const userLogin = (values) => {
       console.log(values);
 
-      const url = `${process.env.VUE_APP_BACK_END_HOST}/api/userLogin`;
+      const url = `${process.env.VUE_APP_BASEURL}/api/userLogin`;
       const payload = {
         email: userInfo.stuEmail,
       };
@@ -50,10 +50,17 @@ export default defineComponent({
           headers: {
             "Content-Type": "application/json",
           },
+          timeout:10000
         })
         .then((res) => {
           console.log(res.data);
-          message.info("邮件已发送");
+          if(res.data.msg==="success"){
+            message.info("邮件已发送")
+          }
+          else{
+            message.warn("邮件发送失败")
+          }
+          
         })
         .catch((e) => {
           console.log(e);

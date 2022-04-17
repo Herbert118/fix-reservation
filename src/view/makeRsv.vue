@@ -16,15 +16,19 @@
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, onMounted } from "vue"
 import router from "../router"
-import { useStore } from "vuex";
+import { useStore } from "vuex"
+import axios from "axios"
+import { message } from "ant-design-vue";
 export default defineComponent({
   props: {},
   setup() {
     const store = useStore()
+    //const token = store.state.userAuth
     //data
-    const sessions = ref([
+    const baseUrl = process.env.VUE_APP_BASEURL;
+    let sessions = ref([
       {
         sesID: "abc",
         date: "2021-4-6",
@@ -73,6 +77,19 @@ export default defineComponent({
       store.commit("setUserAuth","")
       router.push("/user/login")
     }
+    //hook
+    onMounted(()=>{
+      const url = baseUrl+"/api/ses"
+      axios
+      .get(url)
+      .then((res)=>{
+        sessions = res.data.sessions
+      })
+      .catch((e)=>{
+        console.log(e)
+        message.warn("fail")
+      })
+    })
 
     return {
       sessions,

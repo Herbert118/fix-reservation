@@ -54,7 +54,7 @@ export default defineComponent({
     });
     //method
     const onFinish = (values) => {
-      const url = `${process.env.VUE_APP_BACK_END_HOST}/api/adminLogin`;
+      const url = `${process.env.VUE_APP_BASEURL}/api/adminLogin`;
       const payload = {
         account: values.account,
         password: values.password,
