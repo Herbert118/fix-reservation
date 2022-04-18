@@ -1,41 +1,45 @@
 <template>
-<a-page-header title = "预约维修系统" sub-title="管理预约">
-  <template #extra>
-    <a-button type="" @click="logout">注销</a-button>
+  <a-page-header title="预约维修系统" sub-title="管理预约">
+    <template #extra>
+      <a-button type="" @click="logout">注销</a-button>
     </template>
-</a-page-header>
+  </a-page-header>
   <div class="page">
-    <a-button
-      class="editable-add-btn"
-      style="margin-bottom: 8px"
-      @click="handleAdd"
-      >Add</a-button
-    >
-    <a-table bordered :data-source="sessions" :columns="columns">
-      <template #bodyCell="{ column,  record }">
-        
+    <div class="btnArea">
+      <a-button style="margin-bottom: 8px;width:100px"
+       @click="handleAdd" type="primary"
 
-        <template v-if="column.dataIndex === 'operation'">
-          <a-popconfirm
-            v-if="sessions.length"
-            title="Sure to delete?"
-            @confirm="onDelete(record.key)"
-          >
-            <a-button type="">Delete</a-button>
-          </a-popconfirm>
+        >Add
+      </a-button>
+
+      <a-table bordered :data-source="sessions" :columns="columns">
+        <template #bodyCell="{ column, record }">
+          <template v-if="column.dataIndex === 'operation'">
+            <a-popconfirm
+              v-if="sessions.length"
+              title="Sure to delete?"
+              @confirm="onDelete(record.sesID)"
+            >
+              <a-button type="">Delete</a-button>
+            </a-popconfirm>
+          </template>
         </template>
-      </template>
-    </a-table>
+      </a-table>
+    </div>
   </div>
 </template>
 
 <script>
-import { defineComponent, ref, onMounted} from "vue";
-import router from "../router"
-import store from "../store"
+import { defineComponent, ref, onMounted } from "vue";
+import { useStore } from "vuex";
+import { message } from "ant-design-vue";
+import axios from "axios";
+import router from "../router";
 export default defineComponent({
   props: {},
   setup() {
+    const store = useStore();
+    const baseUrl = process.env.VUE_APP_BASEURL;
     //data
     const sessions = ref([
       {
@@ -72,34 +76,57 @@ export default defineComponent({
       {
         title: "limit",
         dataIndex: "limit",
-      },{
-        title:"operation",
-        dataIndex:"operation"
-      }
+      },
+      {
+        title: "operation",
+        dataIndex: "operation",
+      },
     ];
 
-    const onDelete = (key) => {
-      sessions.value = sessions.value.filter((item) => item.key !== key);
+    const onDelete = (sesID) => {
+      const url = baseUrl + "/api/rsv";
+      const token = store.state.userAuth;
+      axios
+        .delete(url, {
+          headers: {
+            Authorization: `${token}`,
+          },
+          data: {
+            sesID,
+          },
+        })
+        .then((res) => {
+          message.info(res.data.msg);
+        })
+        .catch((e) => {
+          message.warn(e);
+        });
     };
 
     const handleAdd = () => {
-      router.push("/admin/sesForm")
+      router.push("/admin/sesForm");
     };
-    const logout = ()=>{
-      store.commit("setAdminAuth","")
-      router.push("/admin/login")
-    }
-  //hook
-    onMounted(()=>{
-      
-    })
+    const logout = () => {
+      store.commit("setAdminAuth", "");
+      router.push("/admin/login");
+    };
+    //hook
+    onMounted(() => {});
     return {
       sessions,
       columns,
       onDelete,
       handleAdd,
-     logout,
+      logout,
     };
   },
 });
 </script>
+
+<style scoped>
+div.btnArea {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+</style>

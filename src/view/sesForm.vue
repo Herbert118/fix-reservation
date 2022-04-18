@@ -100,6 +100,8 @@ export default defineComponent({
       const token = store.state.adminAuth
       const payload = {
         ...sesInfo,
+        startTime:sesInfo.time[0],
+        endTime:sesInfo.time[1],
         token,
 
       }

@@ -49,7 +49,7 @@
 import { defineComponent, reactive } from "vue";
 import {useStore} from "vuex"
 import {message} from "ant-design-vue"
-import {axios} from "axios"
+import axios from "axios"
 import router from "../router"
 export default defineComponent({
   props: {},

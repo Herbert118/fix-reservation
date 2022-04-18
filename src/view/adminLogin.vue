@@ -8,7 +8,7 @@
       :label-col="{ span: 8 }"
       :wrapper-col="{ span: 16 }"
       autocomplete="off"
-      @finish="onFinish"
+      @finish="adminLogin"
       @finishFailed="onFinishFailed"
     >
       <a-form-item
@@ -49,11 +49,11 @@ export default defineComponent({
     const store = useStore();
     //data
     const adminInfo = reactive({
-      username: "",
+      account: "",
       password: "",
     });
     //method
-    const onFinish = (values) => {
+    const adminLogin = (values) => {
       const url = `${process.env.VUE_APP_BASEURL}/api/adminLogin`;
       const payload = {
         account: values.account,
@@ -67,9 +67,7 @@ export default defineComponent({
           },
         })
         .then((res) => {
-          message.info(res.data.token)
-          console.log(res.data.token)
-          store.commit("setUserAuth", res.data.token);
+          store.commit("setAdminAuth", res.data.token);
           router.push("/admin/manageSes");
         })
         .catch((e) => {
@@ -91,7 +89,7 @@ export default defineComponent({
     //return
     return {
       adminInfo,
-      onFinish,
+      adminLogin,
       onFinishFailed,
     };
   },

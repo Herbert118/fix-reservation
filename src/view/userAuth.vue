@@ -6,6 +6,7 @@ import { defineComponent,onMounted } from 'vue'
 import router from "../router"
 import {useStore} from "vuex"
 import axios from "axios"
+import {message} from "ant-design-vue"
 export default defineComponent({
     setup() {
         const store = useStore();
@@ -20,12 +21,14 @@ export default defineComponent({
                         Authorization:`${token}`
                     }
                 })
-                .then(()=>{
+                .then((res)=>{
+                    if(res.data.msg==="success"){
                     store.commit("setUserAuth",router.currentRoute.value.query.token);
                     router.push("/user/makeRsv")
+                    }
                 })
-                .catch((err)=>{
-                    alert(err)
+                .catch((e)=>{
+                    message.warn(e)
                 })
                 
             }
