@@ -48,7 +48,7 @@ export default defineComponent({
         date: "2021-4-6",
         startTime: "19:00",
         endTime: "21:00",
-        position: "浑南",
+        position_type: "浑南",
         limit: 100,
       },
     ]);
@@ -71,8 +71,8 @@ export default defineComponent({
         dataIndex: "endTime",
       },
       {
-        title: "position",
-        dataIndex: "position",
+        title: "position_type",
+        dataIndex: "position_type",
       },
       {
         title: "limit",

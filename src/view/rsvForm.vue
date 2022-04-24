@@ -67,9 +67,11 @@ export default defineComponent({
       const url = baseUrl+"/api/rsv"
       const sesID = router.currentRoute.value.query
       const token=store.state.userAuth
+      const userID = store.state.userInfo.userID
       const payload = {
         ...rsvInfo,
-        sesID
+        sesID,
+        userID
       }
       axios
       .post(url,payload,{

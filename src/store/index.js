@@ -3,7 +3,7 @@ import {createStore} from "vuex"
 const state = {
     adminAuth: localStorage.getItem('adminAuth') ? localStorage.getItem('adminAuth') : '',
     userAuth:localStorage.getItem('userAuth') ? localStorage.getItem('userAuth') : '',
-    userEmail:localStorage.getItem('userEmail') ? localStorage.getItem('userEmail') : ''
+    userInfo:localStorage.getItem('userInfo') ? localStorage.getItem('userInfo') : ''
 }
 
 
@@ -16,9 +16,9 @@ const mutations = {
         state.userAuth = authToken
         localStorage.setItem("userAuth",authToken)
     },
-    setUserEmail(state,email){
-        state.email = email
-        localStorage.setItem("userEmail",email)
+    setUserInfo(state,userInfo){
+        state.userInfo = userInfo
+        localStorage.setItem("userInfo",userInfo)
     }
 
 }

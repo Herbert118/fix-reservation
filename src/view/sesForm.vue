@@ -23,7 +23,7 @@
       :gutter="[16,64]"
       :rules="[{ required: true, message: 'Please input your position!' }]"
     >
-      <a-input v-model:value="sesInfo.position" />
+      <a-input v-model:value="sesInfo.position_type" />
     </a-form-item>
 
     <a-form-item
@@ -81,7 +81,7 @@ export default defineComponent({
     const baseUrl = process.env.VUE_APP_BASEURL
     //data
     const sesInfo = reactive({
-      position: "",
+      position_type: "",
       limit: "",
       date:"",
       time:[]

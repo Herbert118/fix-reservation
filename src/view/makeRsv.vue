@@ -130,7 +130,7 @@ export default defineComponent({
         })
 
       const url2 = baseUrl + "/api/rsv"
-      const email = store.state.userEmail
+      const email = store.state.userInfo.userEmail
       axios
         .get(url2, {
           headers: {

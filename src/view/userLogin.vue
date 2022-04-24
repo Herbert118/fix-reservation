@@ -28,11 +28,10 @@
 import { defineComponent, onMounted, reactive } from "vue";
 import axios from "axios";
 import { message } from "ant-design-vue";
-import {useStore} from "vuex"
 export default defineComponent({
   props: {},
   setup() {
-    const store = useStore()
+   
     //data
     const userInfo = reactive({
       stuEmail: "20206824@stu.neu.edu.cn",
@@ -43,7 +42,7 @@ export default defineComponent({
       const payload = {
         email: userInfo.stuEmail,
       };
-      store.commit("setUserEmail",userInfo.stuEmail)
+     
       axios
         .post(url, payload, {
           headers: {
