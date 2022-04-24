@@ -28,23 +28,22 @@
 import { defineComponent, onMounted, reactive } from "vue";
 import axios from "axios";
 import { message } from "ant-design-vue";
+import {useStore} from "vuex"
 export default defineComponent({
   props: {},
   setup() {
-
+    const store = useStore()
     //data
     const userInfo = reactive({
       stuEmail: "20206824@stu.neu.edu.cn",
     });
     //method
-    const userLogin = (values) => {
-      console.log(values);
-
+    const userLogin = () => {
       const url = `${process.env.VUE_APP_BASEURL}/api/userLogin`;
       const payload = {
         email: userInfo.stuEmail,
       };
-
+      store.commit("setUserEmail",userInfo.stuEmail)
       axios
         .post(url, payload, {
           headers: {
@@ -64,7 +63,7 @@ export default defineComponent({
         })
         .catch((e) => {
           console.log(e);
-          message.warning(e);
+          message.warn("邮件发送失败");
         });
     };
 

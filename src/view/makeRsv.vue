@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, onMounted, } from "vue"
+import { defineComponent, ref, onMounted } from "vue"
 import router from "../router"
 import { useStore } from "vuex"
 import axios from "axios"
@@ -56,7 +56,7 @@ export default defineComponent({
         title: "startTime",
         dataIndex: "startTime",
       },
-      
+
       {
         title: "endTime",
         dataIndex: "endTime",
@@ -72,8 +72,7 @@ export default defineComponent({
       {
         title: "operation",
         dataIndex: "operation",
-      }
-      
+      },
     ]
 
     const rsvColumns = [
@@ -115,9 +114,14 @@ export default defineComponent({
     onMounted(() => {
       const url = baseUrl + "/api/ses"
       axios
-        .get(url)
+        .get(url, {
+          headers: {
+            Authorization: `${token}`,
+          },
+        })
         .then((res) => {
-          sessions.value = res.data.sessions
+          //sessions.value = res.data.sessions
+          sessions.value = res.data
           console.log(sessions.value)
         })
         .catch((e) => {
@@ -129,22 +133,27 @@ export default defineComponent({
       const email = store.state.userEmail
       axios
         .get(url2, {
+          headers: {
+            Authorization: `${token}`,
+          },
           params: {
             email,
           },
         })
         .then((res) => {
-          console.log(res);
-          if (res.data.reservations) {
+          console.log(res.data)
+         // if (res.data.reservations) { //may be changed
+            if(res.data){
             ifAlreadyRsv.value = true
-            reservations.value = res.data.reservations
-          }
-          else{
+            //reservations.value = res.data.reservations
+            reservations.value = res.data
+          } else {
             ifAlreadyRsv.value = false
           }
-          console.log(ifAlreadyRsv);
+          console.log(ifAlreadyRsv)
         })
-        .catch((e)=>{
+        .catch((e) => {
+          message.warn("rsv error")
           console.log(e)
         })
     })

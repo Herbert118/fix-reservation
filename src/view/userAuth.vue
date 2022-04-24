@@ -22,13 +22,15 @@ export default defineComponent({
                     }
                 })
                 .then((res)=>{
-                    if(res.data.msg==="success"){
+                    //if(res.data.msg==="success"){
+                    console.log(res.data)
                     store.commit("setUserAuth",router.currentRoute.value.query.token);
                     router.push("/user/makeRsv")
-                    }
+                    //}
                 })
                 .catch((e)=>{
-                    message.warn(e)
+                    message.warn("user Auth fail")
+                    console.log(e)
                 })
                 
             }

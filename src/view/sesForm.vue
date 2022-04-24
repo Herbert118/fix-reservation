@@ -72,7 +72,7 @@
 import { defineComponent, reactive,onMounted } from "vue";
 import {useStore} from "vuex"
 import {message} from "ant-design-vue"
-import {axios} from "axios"
+import axios from "axios"
 import router from "../router"
 export default defineComponent({
   props: {},
@@ -87,16 +87,8 @@ export default defineComponent({
       time:[]
     });
     //method
-    const onFinish = (values) => {
-      console.log("Success:", values);
-    };
-
-    const onFinishFailed = (errorInfo) => {
-      console.log("Failed:", errorInfo);
-    };
-    //hook
-    onMounted(() =>{
-      const url = baseUrl + "/api/ses"
+    const onFinish = () => {
+       const url = baseUrl + "/api/ses"
       const token = store.state.adminAuth
       const payload = {
         ...sesInfo,
@@ -120,13 +112,26 @@ export default defineComponent({
         console.log(e)
       })
       console.log(router.currentRoute.value);
+    };
+
+    const onFinishFailed = (errorInfo) => {
+      console.log("Failed:", errorInfo);
+    };
+   const logout = () => {
+      store.commit("setAdminAuth", "");
+      router.push("/admin/login");
+    };
+    //hook
+    onMounted(() =>{
+     
     })
 
 //return
     return {
       sesInfo,
       onFinish,
-      onFinishFailed
+      onFinishFailed,
+      logout
     };
   },
 });

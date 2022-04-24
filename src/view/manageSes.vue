@@ -39,6 +39,7 @@ export default defineComponent({
   props: {},
   setup() {
     const store = useStore();
+    const token = store.state.userAuth
     const baseUrl = process.env.VUE_APP_BASEURL;
     //data
     const sessions = ref([
@@ -111,7 +112,24 @@ export default defineComponent({
       router.push("/admin/login");
     };
     //hook
-    onMounted(() => {});
+    onMounted(() => {
+       const url = baseUrl + "/api/ses"
+      axios
+        .get(url,{
+          headers:{
+          Authorization:`${token}`
+        },
+        })
+        .then((res) => {
+          //sessions.value = res.data.sessions //this may be changed
+          sessions.value = res.data
+          console.log(sessions.value)
+        })
+        .catch((e) => {
+          console.log(e)
+          message.warn("session error")
+        })
+    });
     return {
       sessions,
       columns,

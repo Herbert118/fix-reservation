@@ -72,7 +72,7 @@ export default defineComponent({
         })
         .catch((e) => {
           console.log(e);
-          message.warning(e);
+          message.warning("登录失败");
         })
     };
 

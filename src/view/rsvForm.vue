@@ -78,7 +78,7 @@ export default defineComponent({
         }
       })
       .then((res)=>{
-        message.info(res.msg)
+        message.info(res.data.msg)
         router.push("/user/makeRsv")
       })
       .catch((e)=>{
