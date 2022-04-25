@@ -17,14 +17,7 @@
     @finishFailed="onFinishFailed"
   >
   
-    <a-form-item
-      label="地点"
-      name="position"
-      :gutter="[16,64]"
-      :rules="[{ required: true, message: 'Please input your position!' }]"
-    >
-      <a-input v-model:value="sesInfo.position_type" />
-    </a-form-item>
+    
 
     <a-form-item
       label="限制"
@@ -34,11 +27,26 @@
     >
       <a-input v-model:value="sesInfo.limit"></a-input>
     </a-form-item>
+
+<a-form-item
+      label="地点"
+      name="position_type"
+      :gutter="[16,64]"
+      :rules="[{ required: true, message: 'Please input your position!' }]"
+    >
+    <a-select
+      ref="select"
+      v-model:value="sesInfo.position_type"
+      style="width: 120px"
+      :options="options1"
+    ></a-select>
+    </a-form-item>
+
     <a-form-item
     label = "日期"
     name = "date"
     :gutter="[16,64]"
-    :format = "'YYYY-MM-DD'"
+    :format = "dateFormat"
      :rules="[{ required: true, message: 'Please input date!' }]"
     >
 
@@ -69,32 +77,47 @@
    
 
 <script>
-import { defineComponent, reactive,onMounted } from "vue";
+import { defineComponent, reactive,onMounted,ref } from "vue";
 import {useStore} from "vuex"
 import {message} from "ant-design-vue"
 import axios from "axios"
 import router from "../router"
+import dayjs from 'dayjs'
 export default defineComponent({
   props: {},
   setup() {
+    const dateFormat = "YYYY-MM-DD"
     const store = useStore()
     const baseUrl = process.env.VUE_APP_BASEURL
+     const options1 = ref([
+      {
+        value: 1,
+        label: '浑南校区',
+      },
+      {
+        value: 2,
+        label: '南湖校区',
+      }
+    ]);
     //data
     const sesInfo = reactive({
-      position_type: "",
+      
       limit: "",
-      date:"",
+      position_type: "",
+      date:dayjs(),
       time:[]
     });
     //method
     const onFinish = () => {
-       const url = baseUrl + "/api/ses"
+      const url = baseUrl + "/api/ses"
       const token = store.state.adminAuth
+
       const payload = {
-        ...sesInfo,
+        limit:sesInfo.limit,
+        position_type:sesInfo.position_type,
+        date:sesInfo.date.format(dateFormat),
         startTime:sesInfo.time[0],
         endTime:sesInfo.time[1],
-        token,
 
       }
       axios
@@ -108,10 +131,10 @@ export default defineComponent({
         message.info(res.data.msg)
       })
       .catch((e)=>{
-        message.warn(e)
+        message.warn("提交失败")
         console.log(e)
       })
-      console.log(router.currentRoute.value);
+      console.log(router.currentRoute.value)
     };
 
     const onFinishFailed = (errorInfo) => {
@@ -131,7 +154,9 @@ export default defineComponent({
       sesInfo,
       onFinish,
       onFinishFailed,
-      logout
+      logout,
+      options1,
+      dateFormat
     };
   },
 });

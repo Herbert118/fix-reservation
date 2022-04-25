@@ -13,11 +13,11 @@
     >
       <a-form-item
         label="账号"
-        name="username"
+        name="account"
         :gutter="[16, 64]"
         :rules="[{ required: true, message: 'Please input your username!' }]"
       >
-        <a-input v-model:value="adminInfo.username" />
+        <a-input v-model:value="adminInfo.account" />
       </a-form-item>
 
       <a-form-item
@@ -38,75 +38,72 @@
    
 
 <script>
-import { defineComponent, onMounted, reactive } from "vue";
-import { useStore } from "vuex";
-import router from "../router";
-import axios from "axios";
-import { message } from "ant-design-vue";
+import { defineComponent, onMounted, reactive } from "vue"
+import { useStore } from "vuex"
+import router from "../router"
+import axios from "axios"
+import { message } from "ant-design-vue"
 export default defineComponent({
   props: {},
   setup() {
-    const store = useStore();
+    const store = useStore()
     //data
     const adminInfo = reactive({
       account: "",
       password: "",
-    });
+    })
     //method
-    const adminLogin = (values) => {
-      const url = `${process.env.VUE_APP_BASEURL}/api/adminLogin`;
+    const adminLogin = () => {
+      const url = `${process.env.VUE_APP_BASEURL}/api/adminLogin`
       const payload = {
-        account: values.account,
-        password: values.password,
-      };
+       ...adminInfo
+      }
 
       axios
         .post(url, payload, {
-          headers: {
-            "Content-Type": "application/json",
-          },
+         
         })
         .then((res) => {
-          store.commit("setAdminAuth", res.data.token);
-          router.push("/admin/manageSes");
+          store.commit("setAdminAuth", res.data.token)
+          router.push("/admin/manageSes")
         })
         .catch((e) => {
-          console.log(e);
-          message.warning("登录失败");
+          console.log(e)
+          message.warning("登录失败")
         })
-    };
+    }
 
     const onFinishFailed = (errorInfo) => {
-      console.log("Failed:", errorInfo);
-    };
+      console.log("Failed:", errorInfo)
+    }
     //hook
     onMounted(() => {
       if (store.state.adminAuth) {
-        router.push("/admin/manageSes");
+        router.push("/admin/manageSes")
       }
-    });
+    })
 
     //return
     return {
       adminInfo,
       adminLogin,
       onFinishFailed,
-    };
+    }
   },
-});
+})
 </script>
 
 <style scoped>
 @import "../assets/css/stylesheet.css";
 
 .ant-form {
-  width: calc(50vw);
+  width: calc(50vw)
 }
 
 .ant-space {
-  width: 100%;
+  width: 100%
 }
 .ant-page-header {
-  border: solid 1px gainsboro;
+  border: solid 1px gainsboro
 }
 </style>

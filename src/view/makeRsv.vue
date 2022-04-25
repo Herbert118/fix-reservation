@@ -33,6 +33,7 @@ import router from "../router"
 import { useStore } from "vuex"
 import axios from "axios"
 import { message } from "ant-design-vue"
+import configs from "../config"
 export default defineComponent({
   props: {},
   setup() {
@@ -62,8 +63,8 @@ export default defineComponent({
         dataIndex: "endTime",
       },
       {
-        title: "position",
-        dataIndex: "position",
+        title: "position_type",
+        dataIndex: "position_type",
       },
       {
         title: "limit",
@@ -113,15 +114,20 @@ export default defineComponent({
     //hook
     onMounted(() => {
       const url = baseUrl + "/api/ses"
+      const now = new Date()
       axios
         .get(url, {
           headers: {
             Authorization: `${token}`,
           },
+          params:{
+            fromTime:`${now.getFullYear()}-${now.getMonth()}-${now.getDay()}`,
+          }
         })
         .then((res) => {
           //sessions.value = res.data.sessions
           sessions.value = res.data
+          sessions.value.position = configs.positions[res.data.position_type]
           console.log(sessions.value)
         })
         .catch((e) => {

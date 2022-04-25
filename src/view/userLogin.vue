@@ -25,9 +25,9 @@
 </template>
 
 <script>
-import { defineComponent, onMounted, reactive } from "vue";
-import axios from "axios";
-import { message } from "ant-design-vue";
+import { defineComponent, onMounted, reactive } from "vue"
+import axios from "axios"
+import { message } from "ant-design-vue"
 export default defineComponent({
   props: {},
   setup() {
@@ -35,13 +35,13 @@ export default defineComponent({
     //data
     const userInfo = reactive({
       stuEmail: "20206824@stu.neu.edu.cn",
-    });
+    })
     //method
     const userLogin = () => {
-      const url = `${process.env.VUE_APP_BASEURL}/api/userLogin`;
+      const url = `${process.env.VUE_APP_BASEURL}/api/userLogin`
       const payload = {
         email: userInfo.stuEmail,
-      };
+      }
      
       axios
         .post(url, payload, {
@@ -51,7 +51,7 @@ export default defineComponent({
           timeout:10000
         })
         .then((res) => {
-          console.log(res.data);
+          console.log(res.data)
           if(res.data.msg==="success"){
             message.info("邮件已发送")
           }
@@ -61,25 +61,25 @@ export default defineComponent({
           
         })
         .catch((e) => {
-          console.log(e);
-          message.warn("邮件发送失败");
-        });
-    };
+          console.log(e)
+          message.warn("邮件发送失败")
+        })
+    }
 
     //hook
     onMounted(() => {
 
-    });
+    })
 
     return {
       userInfo,
       userLogin,
-    };
+    }
   },
-});
+})
 </script>
 <style scoped>
 .ant-form {
-  width: calc(50vw);
+  width: calc(50vw)
 }
 </style>

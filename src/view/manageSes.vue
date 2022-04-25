@@ -8,7 +8,6 @@
     <div class="btnArea">
       <a-button style="margin-bottom: 8px;width:100px"
        @click="handleAdd" type="primary"
-
         >Add
       </a-button>
 
@@ -35,23 +34,15 @@ import { useStore } from "vuex";
 import { message } from "ant-design-vue";
 import axios from "axios";
 import router from "../router";
+import configs from "../config"
 export default defineComponent({
   props: {},
   setup() {
     const store = useStore();
-    const token = store.state.userAuth
+    const token = store.state.adminAuth
     const baseUrl = process.env.VUE_APP_BASEURL;
     //data
-    const sessions = ref([
-      {
-        sesID: "0",
-        date: "2021-4-6",
-        startTime: "19:00",
-        endTime: "21:00",
-        position_type: "浑南",
-        limit: 100,
-      },
-    ]);
+    const sessions = ref([]);
 
     const columns = [
       {
@@ -71,8 +62,8 @@ export default defineComponent({
         dataIndex: "endTime",
       },
       {
-        title: "position_type",
-        dataIndex: "position_type",
+        title: "position",
+        dataIndex: "position",
       },
       {
         title: "limit",
@@ -123,6 +114,7 @@ export default defineComponent({
         .then((res) => {
           //sessions.value = res.data.sessions //this may be changed
           sessions.value = res.data
+          sessions.value.position = configs.positions[res.data.position_type]
           console.log(sessions.value)
         })
         .catch((e) => {
