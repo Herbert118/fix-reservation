@@ -6,7 +6,7 @@
   </a-page-header>
   <div class="page">
     <div class="btnArea">
-      <a-button style="margin-bottom: 8px;width:100px"
+      <a-button style="margin-bottom: 8pxwidth:100px"
        @click="handleAdd" type="primary"
         >Add
       </a-button>
@@ -29,20 +29,19 @@
 </template>
 
 <script>
-import { defineComponent, ref, onMounted } from "vue";
-import { useStore } from "vuex";
-import { message } from "ant-design-vue";
-import axios from "axios";
-import router from "../router";
-import configs from "../config"
+import { defineComponent, ref, onMounted } from "vue"
+import { useStore } from "vuex"
+import { message } from "ant-design-vue"
+import axios from "axios"
+import router from "../router"
 export default defineComponent({
   props: {},
   setup() {
-    const store = useStore();
+    const store = useStore()
     const token = store.state.adminAuth
-    const baseUrl = process.env.VUE_APP_BASEURL;
+    const baseUrl = process.env.VUE_APP_BASEURL
     //data
-    const sessions = ref([]);
+    const sessions = ref([])
 
     const columns = [
       {
@@ -73,11 +72,10 @@ export default defineComponent({
         title: "operation",
         dataIndex: "operation",
       },
-    ];
+    ]
 
     const onDelete = (sesID) => {
-      const url = baseUrl + "/api/rsv";
-      const token = store.state.userAuth;
+      const url = baseUrl + "/api/ses"
       axios
         .delete(url, {
           headers: {
@@ -88,20 +86,20 @@ export default defineComponent({
           },
         })
         .then((res) => {
-          message.info(res.data.msg);
+          message.info(res.data.msg)
         })
-        .catch((e) => {
-          message.warn(e);
-        });
-    };
+        .catch(() => {
+          message.warn("delete fail")
+        })
+    }
 
     const handleAdd = () => {
-      router.push("/admin/sesForm");
-    };
+      router.push("/admin/sesForm")
+    }
     const logout = () => {
-      store.commit("setAdminAuth", "");
-      router.push("/admin/login");
-    };
+      store.commit("setAdminAuth", "")
+      router.push("/admin/login")
+    }
     //hook
     onMounted(() => {
        const url = baseUrl + "/api/ses"
@@ -114,29 +112,28 @@ export default defineComponent({
         .then((res) => {
           //sessions.value = res.data.sessions //this may be changed
           sessions.value = res.data
-          sessions.value.position = configs.positions[res.data.position_type]
           console.log(sessions.value)
         })
         .catch((e) => {
           console.log(e)
           message.warn("session error")
         })
-    });
+    })
     return {
       sessions,
       columns,
       onDelete,
       handleAdd,
       logout,
-    };
+    }
   },
-});
+})
 </script>
 
 <style scoped>
 div.btnArea {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: flex-end
 }
 </style>

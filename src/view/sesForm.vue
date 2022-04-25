@@ -91,11 +91,11 @@ export default defineComponent({
     const baseUrl = process.env.VUE_APP_BASEURL
      const options1 = ref([
       {
-        value: 1,
+        value: '浑南校区',
         label: '浑南校区',
       },
       {
-        value: 2,
+        value: '浑南校区',
         label: '南湖校区',
       }
     ]);

@@ -33,7 +33,7 @@ import router from "../router"
 import { useStore } from "vuex"
 import axios from "axios"
 import { message } from "ant-design-vue"
-import configs from "../config"
+
 export default defineComponent({
   props: {},
   setup() {
@@ -63,8 +63,8 @@ export default defineComponent({
         dataIndex: "endTime",
       },
       {
-        title: "position_type",
-        dataIndex: "position_type",
+        title: "position",
+        dataIndex: "position",
       },
       {
         title: "limit",
@@ -100,7 +100,7 @@ export default defineComponent({
       const url = baseUrl + "/api/rsv"
       axios.delete(url, {
         headers: {
-          Authorization: token,
+          Authorization: `${token}`,
         },
         data: {
           sesID,
@@ -127,7 +127,6 @@ export default defineComponent({
         .then((res) => {
           //sessions.value = res.data.sessions
           sessions.value = res.data
-          sessions.value.position = configs.positions[res.data.position_type]
           console.log(sessions.value)
         })
         .catch((e) => {
