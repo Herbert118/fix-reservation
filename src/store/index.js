@@ -3,7 +3,9 @@ import {createStore} from "vuex"
 const state = {
     adminAuth: localStorage.getItem('adminAuth') ? localStorage.getItem('adminAuth') : '',
     userAuth:localStorage.getItem('userAuth') ? localStorage.getItem('userAuth') : '',
-    userInfo:localStorage.getItem('userInfo') ? localStorage.getItem('userInfo') : ''
+    userInfo:JSON.parse(localStorage.getItem('userInfos') ? localStorage.getItem('userInfos') : '{}')
+    //userInfo:{}
+
 }
 
 
@@ -18,7 +20,7 @@ const mutations = {
     },
     setUserInfo(state,userInfo){
         state.userInfo = userInfo
-        localStorage.setItem("userInfo",userInfo)
+        localStorage.setItem("userInfos",JSON.stringify(userInfo))
     }
 
 }

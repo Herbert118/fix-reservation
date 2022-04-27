@@ -46,7 +46,7 @@
    
 
 <script>
-import { defineComponent, reactive } from "vue";
+import { defineComponent, onMounted, reactive } from "vue";
 import {useStore} from "vuex"
 import {message} from "ant-design-vue"
 import axios from "axios"
@@ -65,13 +65,16 @@ export default defineComponent({
     //method
     const submitRsv = () => {
       const url = baseUrl+"/api/rsv"
-      const sesID = router.currentRoute.value.query
+      const sesID = router.currentRoute.value.query.sesID
+      const position = router.currentRoute.value.query.position
       const token=store.state.userAuth
       const userID = store.state.userInfo.userID
+      console.log(router.currentRoute.value.query)
       const payload = {
         ...rsvInfo,
         sesID,
-        userID
+        userID,
+        position
       }
       axios
       .post(url,payload,{
@@ -92,6 +95,10 @@ export default defineComponent({
     const submitRsvFailed = (errorInfo) => {
       console.log("Failed:", errorInfo);
     };
+    //hook
+    onMounted(()=>{
+      console.log(router.currentRoute.value.query)
+    })
 
 //return
     return {

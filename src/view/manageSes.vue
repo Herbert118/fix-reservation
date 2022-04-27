@@ -87,6 +87,7 @@ export default defineComponent({
         })
         .then((res) => {
           message.info(res.data.msg)
+          getSes()
         })
         .catch(() => {
           message.warn("delete fail")
@@ -100,8 +101,7 @@ export default defineComponent({
       store.commit("setAdminAuth", "")
       router.push("/admin/login")
     }
-    //hook
-    onMounted(() => {
+    const getSes = ()=>{
        const url = baseUrl + "/api/ses"
       axios
         .get(url,{
@@ -115,9 +115,15 @@ export default defineComponent({
           console.log(sessions.value)
         })
         .catch((e) => {
-          console.log(e)
-          message.warn("session error")
+          message.warn(e.response.data.msg)
+          if(e.response.status == 401){
+            logout()
+          }
         })
+    }
+    //hook
+    onMounted(() => {
+      getSes()
     })
     return {
       sessions,

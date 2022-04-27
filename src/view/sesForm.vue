@@ -30,13 +30,13 @@
 
 <a-form-item
       label="地点"
-      name="position_type"
+      name="position"
       :gutter="[16,64]"
       :rules="[{ required: true, message: 'Please input your position!' }]"
     >
     <a-select
       ref="select"
-      v-model:value="sesInfo.position_type"
+      v-model:value="sesInfo.position"
       style="width: 120px"
       :options="options1"
     ></a-select>
@@ -91,11 +91,11 @@ export default defineComponent({
     const baseUrl = process.env.VUE_APP_BASEURL
      const options1 = ref([
       {
-        value: '浑南校区',
+        value: '1',
         label: '浑南校区',
       },
       {
-        value: '浑南校区',
+        value: '2',
         label: '南湖校区',
       }
     ]);
@@ -103,7 +103,7 @@ export default defineComponent({
     const sesInfo = reactive({
       
       limit: "",
-      position_type: "",
+      position: "",
       date:dayjs(),
       time:[]
     });
@@ -114,7 +114,7 @@ export default defineComponent({
 
       const payload = {
         limit:sesInfo.limit,
-        position_type:sesInfo.position_type,
+        position:sesInfo.position,
         date:sesInfo.date.format(dateFormat),
         startTime:sesInfo.time[0],
         endTime:sesInfo.time[1],
