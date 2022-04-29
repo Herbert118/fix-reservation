@@ -17,7 +17,7 @@ export default defineComponent({
                  const url =  `${process.env.VUE_APP_BASEURL}/api/userAuth`
                 axios
                 .get(url,{
-                    headers:{
+                    headers:{ 
                         Authorization:`${token}`
                     }
                 })
