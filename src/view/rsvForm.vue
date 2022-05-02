@@ -1,110 +1,85 @@
 
 <template>
-<a-page-header title = "预约维修系统" sub-title="填写预约信息">
-  <template #extra>
-    <a-button type="" @click="logout">注销</a-button>
+  <a-page-header title="预约维修系统" sub-title="填写预约信息">
+    <template #extra>
+      <a-button type="" @click="logout">注销</a-button>
     </template>
-</a-page-header>
-<div class = "page">
-  <a-form
-    :model="rsvInfo"
-    name="basic"
-    :label-col="{ span: 8 }"
-    :wrapper-col="{ span: 16 }"
-    
-    autocomplete="off"
-    @finish="submitRsv"
-    @finishFailed="submitRsvFailed"
-  >
-  
-    <a-form-item
-      label="型号"
-      name="model"
-      :gutter="[16,64]"
-      :rules="[{ required: true, message: 'Please input your model!' }]"
+  </a-page-header>
+  <div class="page">
+    <a-form
+      :model="rsvInfo"
+      name="basic"
+      :label-col="{ span: 8 }"
+      :wrapper-col="{ span: 16 }"
+      autocomplete="off"
+      @finish="submitRsv"
+      @finishFailed="submitRsvFailed"
     >
-      <a-input v-model:value="rsvInfo.model" />
-    </a-form-item>
+      <a-form-item
+        label="型号"
+        name="model"
+        :gutter="[16, 64]"
+        :rules="[{ required: true, message: 'Please input your model!' }]"
+      >
+        <a-input v-model:value="rsvInfo.model" />
+      </a-form-item>
 
-    <a-form-item
-      label="问题"
-      name="question"
-      :gutter="[16,64]"
-      :rules="[{ required: true, message: 'Please input your question!' }]"
-    >
-      <a-textarea v-model:value="rsvInfo.question"></a-textarea>
-    </a-form-item>
+      <a-form-item
+        label="问题"
+        name="question"
+        :gutter="[16, 64]"
+        :rules="[{ required: true, message: 'Please input your question!' }]"
+      >
+        <a-textarea v-model:value="rsvInfo.question"></a-textarea>
+      </a-form-item>
 
-
-    <a-form-item :wrapper-col="{ offset: 9, span: 13 }" :gutter="[16,32]">
-      <a-button type="primary" html-type="submit" block>提交</a-button>
-    </a-form-item>
-    
-  </a-form>
+      <a-form-item :wrapper-col="{ offset: 9, span: 13 }" :gutter="[16, 32]">
+        <a-button type="primary" html-type="submit" block>提交</a-button>
+      </a-form-item>
+    </a-form>
   </div>
 </template>
    
 
 <script>
-import { defineComponent, onMounted, reactive } from "vue";
-import {useStore} from "vuex"
-import {message} from "ant-design-vue"
-import axios from "axios"
-import router from "../router"
+import { defineComponent, onMounted } from "vue";
+import { message } from "ant-design-vue";
+import store from "../store";
+
+import router from "../router";
+import useReservations from "../composables/useReservations";
 export default defineComponent({
   props: {},
   setup() {
-    const baseUrl = process.env.VUE_APP_BASEURL
-    const store = useStore()
+    const baseUrl = process.env.VUE_APP_BASEURL;
 
     //data
-    const rsvInfo = reactive({
-      model: "",
-      question: "",
-    });
+    const { rsvInfo, submitRsv } = useReservations(
+      { baseUrl },
+      { message, router }
+    );
     //method
-    const submitRsv = () => {
-      const url = baseUrl+"/api/rsv"
-      const sesID = router.currentRoute.value.query.sesID
-      const position = router.currentRoute.value.query.position
-      const token=store.state.userAuth
-      const userID = store.state.userInfo.userID
-      console.log(router.currentRoute.value.query)
-      const payload = {
-        ...rsvInfo,
-        sesID,
-        userID,
-        position
-      }
-      axios
-      .post(url,payload,{
-        headers:{
-          Authorization:`${token}`
-        }
-      })
-      .then((res)=>{
-        message.info(res.data.msg)
-        router.push("/user/makeRsv")
-      })
-      .catch((e)=>{
-        message.warning(e)
-      })
-      
-    };
 
     const submitRsvFailed = (errorInfo) => {
       console.log("Failed:", errorInfo);
     };
-    //hook
-    onMounted(()=>{
-      console.log(router.currentRoute.value.query)
-    })
 
-//return
+    const logout = () => {
+      store.commit("setUserAuth", "");
+      store.commit("setUserInfo", {});
+      router.push("/user/login");
+    };
+    //hook
+    onMounted(() => {
+      console.log(router.currentRoute.value.query);
+    });
+
+    //return
     return {
       rsvInfo,
       submitRsv,
       submitRsvFailed,
+      logout,
     };
   },
 });
@@ -113,13 +88,11 @@ export default defineComponent({
 <style scoped>
 @import "../assets/css/stylesheet.css";
 
-
-.ant-form{
+.ant-form {
   width: calc(50vw);
 }
 
-.ant-space{
+.ant-space {
   width: 100%;
 }
-
 </style>

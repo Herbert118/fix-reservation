@@ -22,7 +22,7 @@
     >
       <template #bodyCell="{ column, record }">
         <template v-if="column.title == 'operation'">
-          <a-button type="" @click="cancel(record.id)">取消</a-button>
+          <a-button type="" @click="cancelRsv(record.id)">取消</a-button>
         </template>
       </template>
     </a-table>
@@ -30,103 +30,18 @@
 </template>
 
 <script>
-import { defineComponent, ref, onMounted } from "vue";
+import { defineComponent } from "vue";
 import router from "../router";
 import { useStore } from "vuex";
-import axios from "axios";
+import useSessions from "../composables/useSessions";
+import useReservations from "../composables/useReservations";
 import { message } from "ant-design-vue";
-
 export default defineComponent({
   props: {},
   setup() {
     const store = useStore();
     const token = store.state.userAuth;
     const baseUrl = process.env.VUE_APP_BASEURL;
-    //data
-    let ifAlreadyRsv = ref(false);
-    let sessions = ref([]);
-    let reservations = ref([]);
-    const sesColumns = [
-      {
-        title: "sesID",
-        dataIndex: "sesID",
-      },
-      {
-        title: "date",
-        dataIndex: "date",
-      },
-      {
-        title: "startTime",
-        dataIndex: "startTime",
-      },
-
-      {
-        title: "endTime",
-        dataIndex: "endTime",
-      },
-      {
-        title: "position",
-        dataIndex: "position",
-      },
-      {
-        title: "limit",
-        dataIndex: "limit",
-      },
-      {
-        title: "operation",
-        dataIndex: "operation",
-      },
-    ];
-
-    const rsvColumns = [
-      {
-        title: "rsvID",
-        dataIndex: "id",
-      },
-      {
-        title: "model",
-        dataIndex: "model",
-      },
-      {
-        title: "question",
-        dataIndex: "question",
-      },
-      {
-        title: "operation",
-        dataIndex: "operation",
-      },
-    ];
-
-    //method
-    const reserve = (sesID, position) => {
-      router.push({ path: "/user/rsvForm", query: { sesID, position } });
-    };
-
-    const cancel = (rsvID) => {
-      const url = baseUrl + "/api/rsv";
-      axios.delete(url, {
-        headers: {
-          Authorization: `${token}`,
-        },
-        data: {
-          rsvID,
-        },
-      })
-      .then((res)=>{
-        if(res.data.msg === "success"){
-          message.info("cancel success");
-          getSes();
-          getRsv();
-        }
-        else[
-          message.warn("cancel fail")
-        ]
-      })
-      .catch((e)=>{
-        console.log(e)
-        message.warn("cancel fail")
-      });
-    };
 
     const logout = () => {
       store.commit("setUserAuth", "");
@@ -134,70 +49,18 @@ export default defineComponent({
       router.push("/user/login");
     };
 
-    const getSes = () => {
-      const url = baseUrl + "/api/ses";
-      const now = new Date();
-      axios
-        .get(url, {
-          headers: {
-            Authorization: `${token}`,
-          },
-          params: {
-            fromTime: `${now.getFullYear()}-${now.getMonth()}-${now.getDay()}`,
-          },
-        })
-        .then((res) => {
-          //sessions.value = res.data.sessions
-          sessions.value = res.data;
-          console.log(sessions.value);
-        })
-        .catch((e) => {
-          message.warn(e.response.data.msg);
-          if (e.response.status == 401) {
-            logout();
-          }
-        });
+    //data
+    const { sessions, sesColumns, getSes } = useSessions(
+      { baseUrl, token },
+      { logout, message }
+    );
+    const { reservations, rsvColumns, cancelRsv, ifAlreadyRsv } =
+      useReservations({ baseUrl }, { message, getSes, router });
+
+    //method
+    const reserve = (sesID, position) => {
+      router.push({ path: "/user/rsvForm", query: { sesID, position } });
     };
-
-    const getRsv = () => {
-      const url2 = baseUrl + "/api/rsv";
-      const email = store.state.userInfo.userEmail;
-      console.log("store.state");
-      console.log(store.state.userInfo);
-      console.log(store.state.adminAuth);
-
-      axios
-        .get(url2, {
-          headers: {
-            Authorization: `${token}`,
-          },
-          params: {
-            email,
-          },
-        })
-        .then((res) => {
-          console.log(res.data);
-          // if (res.data.reservations) { //may be changed
-          if (res.data.length) {
-            ifAlreadyRsv.value = true;
-            //reservations.value = res.data.reservations
-            reservations.value = res.data;
-          } else {
-            ifAlreadyRsv.value = false;
-          }
-          console.log(ifAlreadyRsv);
-        })
-        .catch((e) => {
-          message.warn("rsv error");
-          console.log(e);
-        });
-    };
-
-    //hook
-    onMounted(() => {
-      getSes();
-      getRsv();
-    });
 
     return {
       ifAlreadyRsv,
@@ -207,7 +70,7 @@ export default defineComponent({
       rsvColumns,
       reserve,
       logout,
-      cancel,
+      cancelRsv,
     };
   },
 });
