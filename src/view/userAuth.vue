@@ -3,39 +3,13 @@
 </template>
 <script>
 import { defineComponent,onMounted } from 'vue'
-import router from "../router"
-import {useStore} from "vuex"
-import axios from "axios"
+
 import {message} from "ant-design-vue"
+import useUserAuth from "../composables/useUserAuth"
 export default defineComponent({
     setup() {
-        const store = useStore();
-        //hook
-        onMounted(()=>{
-            let token = router.currentRoute.value.query.token
-            if(token){
-                 const url =  `${process.env.VUE_APP_BASEURL}/api/userAuth`
-                axios
-                .get(url,{
-                    headers:{ 
-                        Authorization:`${token}`
-                    }
-                })
-                .then((res)=>{
-                    
-                    console.log(res.data)
-                    store.commit("setUserAuth",router.currentRoute.value.query.token);
-                    store.commit("setUserInfo",{userID:`${res.data.id}`,userEmail:`${res.data.email}`})
-                    router.push("/user/makeRsv")
-                    })
-                .catch((e)=>{
-                    message.warn("error:user Auth fail")
-                    console.log(e)
-                })
-                
-            }
-            
-        })
+        const {userAuth} = useUserAuth({},{message})
+        onMounted(userAuth)
     },
 })
 </script>

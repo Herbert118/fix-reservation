@@ -31,7 +31,7 @@
 
 <script>
 import { defineComponent } from "vue";
-import router from "../router";
+import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import useSessions from "../composables/useSessions";
 import useReservations from "../composables/useReservations";
@@ -39,6 +39,7 @@ import { message } from "ant-design-vue";
 export default defineComponent({
   props: {},
   setup() {
+    const router = useRouter();
     const store = useStore();
     const token = store.state.userAuth;
     const baseUrl = process.env.VUE_APP_BASEURL;

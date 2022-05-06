@@ -25,51 +25,16 @@
 </template>
 
 <script>
-import { defineComponent, onMounted, reactive } from "vue"
-import axios from "axios"
+import { defineComponent} from "vue"
+
 import { message } from "ant-design-vue"
+import useUserAuth from "../composables/useUserAuth"
 export default defineComponent({
   props: {},
   setup() {
    
-    //data
-    const userInfo = reactive({
-      stuEmail: "20206824@stu.neu.edu.cn",
-    })
-    //method
-    const userLogin = () => {
-      const url = `${process.env.VUE_APP_BASEURL}/api/userLogin`
-      const payload = {
-        email: userInfo.stuEmail,
-      }
-     
-      axios
-        .post(url, payload, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          timeout:10000
-        })
-        .then((res) => {
-          console.log(res.data)
-          if(res.data.msg==="success"){
-            message.info("邮件已发送")
-          }
-          else{
-            message.warn("邮件发送失败")
-          }
-          
-        })
-        .catch((e) => {
-          console.log(e)
-          message.warn("邮件发送失败")
-        })
-    }
-
-    //hook
-    onMounted(() => {
-
-    })
+    
+    const {userInfo,userLogin} = useUserAuth({},{message});
 
     return {
       userInfo,

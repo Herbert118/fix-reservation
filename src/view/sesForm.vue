@@ -72,7 +72,7 @@
 import { defineComponent, ref } from "vue";
 import { useStore } from "vuex";
 import { message } from "ant-design-vue";
-import router from "../router";
+import { useRouter } from "vue-router";
 
 import useSessions from "@/composables/useSessions";
 export default defineComponent({
@@ -81,6 +81,7 @@ export default defineComponent({
     const store = useStore();
     const baseUrl = process.env.VUE_APP_BASEURL;
     const token = store.state.adminAuth;
+    const router = useRouter();
     const options1 = ref([
       {
         value: "1",

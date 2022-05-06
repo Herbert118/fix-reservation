@@ -34,7 +34,7 @@
 import { defineComponent } from "vue";
 import { useStore } from "vuex";
 import { message } from "ant-design-vue";
-import router from "../router";
+import { useRouter } from "vue-router";
 import useSessions from "@/composables/useSessions";
 export default defineComponent({
   props: {},
@@ -42,6 +42,7 @@ export default defineComponent({
     const store = useStore();
     const token = store.state.adminAuth;
     const baseUrl = process.env.VUE_APP_BASEURL;
+    const router = useRouter();
 
     const logout = () => {
       store.commit("setAdminAuth", "");
@@ -54,7 +55,6 @@ export default defineComponent({
     const {
       sessions,
       sesColumns,
-
       getSes,
       deleteSes,
     } = useSessions(info, depend);

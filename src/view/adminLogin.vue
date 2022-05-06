@@ -38,72 +38,38 @@
    
 
 <script>
-import { defineComponent, onMounted, reactive } from "vue"
-import { useStore } from "vuex"
-import router from "../router"
-import axios from "axios"
-import { message } from "ant-design-vue"
+import { defineComponent } from "vue";
+import { message } from "ant-design-vue";
+import useAdminAuth from "../composables/useAdminAuth";
 export default defineComponent({
   props: {},
   setup() {
-    const store = useStore()
-    //data
-    const adminInfo = reactive({
-      account: "",
-      password: "",
-    })
-    //method
-    const adminLogin = () => {
-      const url = `${process.env.VUE_APP_BASEURL}/api/adminLogin`
-      const payload = {
-       ...adminInfo
-      }
-
-      axios
-        .post(url, payload, {
-         
-        })
-        .then((res) => {
-          store.commit("setAdminAuth", res.data.token)
-          router.push("/admin/manageSes")
-        })
-        .catch((e) => {
-          console.log(e)
-          message.warning("登录失败")
-        })
-    }
-
+    const { adminInfo, adminLogin } = useAdminAuth({}, { message });
     const onFinishFailed = (errorInfo) => {
-      console.log("Failed:", errorInfo)
-    }
-    //hook
-    onMounted(() => {
-      if (store.state.adminAuth) {
-        router.push("/admin/manageSes")
-      }
-    })
+      console.log("Failed:", errorInfo);
+    };
 
     //return
     return {
       adminInfo,
       adminLogin,
       onFinishFailed,
-    }
+    };
   },
-})
+});
 </script>
 
 <style scoped>
 @import "../assets/css/stylesheet.css";
 
 .ant-form {
-  width: calc(50vw)
+  width: calc(50vw);
 }
 
 .ant-space {
-  width: 100%
+  width: 100%;
 }
 .ant-page-header {
-  border: solid 1px gainsboro
+  border: solid 1px gainsboro;
 }
 </style>
