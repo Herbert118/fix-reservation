@@ -5,7 +5,13 @@
     </template>
   </a-page-header>
   <div class="page">
-    <a-table :dataSource="sessions" :columns="sesColumns" v-if="!ifAlreadyRsv">
+     <a-alert
+    description="注意选择合适的时间哦"
+    type="info"
+    show-icon
+  />
+  <br>
+    <a-table class="sesTable" :dataSource="sessions" :columns="sesColumns" v-if="!ifAlreadyRsv">
       <template #bodyCell="{ column, record }">
         <template v-if="column.title == 'operation'">
           <a-button type="" @click="reserve(record.sesID, record.position)"

@@ -19,18 +19,22 @@ export default function useSessions(info, depend) {
   const sesColumns = reactive([{
     title: "sesID",
     dataIndex: "sesID",
+    width:'15%',
   },
   {
     title: "date",
     dataIndex: "date",
+    width:'20%',
   },
   {
     title: "startTime",
     dataIndex: "startTime",
+    width:'20%',
   },
   {
     title: "endTime",
     dataIndex: "endTime",
+    width:'20%',
   },
   {
     title: "position",

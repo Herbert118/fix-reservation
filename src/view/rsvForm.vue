@@ -5,38 +5,23 @@
       <a-button type="" @click="logout">注销</a-button>
     </template>
   </a-page-header>
-  <div class="page">
-    <a-form
-      :model="rsvInfo"
-      name="basic"
-      :label-col="{ span: 8 }"
-      :wrapper-col="{ span: 16 }"
-      autocomplete="off"
-      @finish="submitRsv"
-      @finishFailed="submitRsvFailed"
-    >
-      <a-form-item
-        label="型号"
-        name="model"
-        :gutter="[16, 64]"
-        :rules="[{ required: true, message: 'Please input your model!' }]"
-      >
-        <a-input v-model:value="rsvInfo.model" />
-      </a-form-item>
+  <div class="narrPage">
+    <div class="formBox">
+      <a-form :model="rsvInfo" name="basic" :label-col="{ offset: 0, span: 0 }" :wrapper-col="{ offset: 1, span: 20 }"
+        autocomplete="off" @finish="submitRsv" @finishFailed="submitRsvFailed">
+        <a-form-item label="型号" name="model" :rules="[{ required: true, message: 'Please input your model!' }]">
+          <a-input v-model:value="rsvInfo.model" placeholder="电脑型号"/>
+        </a-form-item>
 
-      <a-form-item
-        label="问题"
-        name="question"
-        :gutter="[16, 64]"
-        :rules="[{ required: true, message: 'Please input your question!' }]"
-      >
-        <a-textarea v-model:value="rsvInfo.question"></a-textarea>
-      </a-form-item>
-
-      <a-form-item :wrapper-col="{ offset: 9, span: 13 }" :gutter="[16, 32]">
-        <a-button type="primary" html-type="submit" block>提交</a-button>
-      </a-form-item>
-    </a-form>
+        <a-form-item label="问题" name="question" :rules="[{ required: true, message: 'Please input your question!' }]">
+          <a-textarea v-model:value="rsvInfo.question" placeholder="遇到的问题或者需要的服务"></a-textarea>
+        </a-form-item>
+        <br>
+        <a-form-item :wrapper-col="{ offset: 6, span: 12 }">
+          <a-button type="primary" html-type="submit" block>提交</a-button>
+        </a-form-item>
+      </a-form>
+    </div>
   </div>
 </template>
    
@@ -46,11 +31,12 @@ import { defineComponent, onMounted } from "vue";
 import { message } from "ant-design-vue";
 import store from "../store";
 
-import router from "../router";
+import { useRouter } from "vue-router";
 import useReservations from "../composables/useReservations";
 export default defineComponent({
   props: {},
   setup() {
+    const router = useRouter();
     const baseUrl = process.env.VUE_APP_BASEURL;
 
     //data
@@ -89,7 +75,7 @@ export default defineComponent({
 @import "../assets/css/stylesheet.css";
 
 .ant-form {
-  width: calc(50vw);
+  width: calc(45vw);
 }
 
 .ant-space {

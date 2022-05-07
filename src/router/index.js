@@ -35,7 +35,6 @@ const routes = [{
     "path": "/user/auth",
     "name": "userAuth",
     "component": userAuth,
-    "beforeEnter":checkAdminAuth
 },
 {
     "path": "/admin/manageSes",

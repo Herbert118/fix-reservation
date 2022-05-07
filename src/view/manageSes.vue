@@ -6,27 +6,18 @@
   </a-page-header>
   <div class="page">
     <div class="btnArea">
-      <a-button
-        style="margin-bottom: 8pxwidth:100px"
-        @click="handleAdd"
-        type="primary"
-        >Add
-      </a-button>
-
-      <a-table bordered :data-source="sessions" :columns="sesColumns">
-        <template #bodyCell="{ column, record }">
-          <template v-if="column.dataIndex === 'operation'">
-            <a-popconfirm
-              v-if="sessions.length"
-              title="Sure to delete?"
-              @confirm="deleteSes(record.sesID)"
-            >
-              <a-button type="">Delete</a-button>
-            </a-popconfirm>
-          </template>
-        </template>
-      </a-table>
+      <a-button @click="handleAdd" type="primary">新建预约</a-button>
     </div>
+    <a-table bordered :data-source="sessions" :columns="sesColumns">
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'operation'">
+          <a-popconfirm v-if="sessions.length" title="Sure to delete?" @confirm="deleteSes(record.sesID)">
+            <a-button type="">Delete</a-button>
+          </a-popconfirm>
+        </template>
+      </template>
+    </a-table>
+
   </div>
 </template>
 
@@ -52,12 +43,10 @@ export default defineComponent({
     //useSessions
     const info = { baseUrl, token };
     const depend = { logout, message };
-    const {
-      sessions,
-      sesColumns,
-      getSes,
-      deleteSes,
-    } = useSessions(info, depend);
+    const { sessions, sesColumns, getSes, deleteSes } = useSessions(
+      info,
+      depend
+    );
 
     const handleAdd = () => {
       router.push("/admin/sesForm");
@@ -77,8 +66,13 @@ export default defineComponent({
 
 <style scoped>
 div.btnArea {
+  width:100%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  align-items: flex-end;
+  padding: calc(2vh) calc(4vw) calc(3vh) 0;
+}
+.ant-btn-primary{
+  width:calc(7vw)
 }
 </style>

@@ -1,12 +1,81 @@
-div.page{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: calc(70vh);
-    width: clac(70vw);
-    margin-right: calc(10vw);
-  }
-  .ant-page-header{
-    border: solid 1px gainsboro;
-  }
+div.page {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  height: 100%;
+  width: calc(94vw);
+  margin-right: calc(3vw);
+  margin-left: calc(3vw);
+  padding-left: calc(2vw);
+  margin-top: calc(2vh);
+  padding-top: calc(3vh);
+
+  background-color: white;
+}
+
+div.narrPage {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  height: 100%;
+  width: calc(50vw);
+  margin-right: calc(23vw);
+  margin-left: calc(23vw);
+  padding-left: calc(2vw);
+  margin-top: calc(2vh);
+  padding-top: calc(3vh);
+
+  background-color: white;
+}
+
+
+div.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+div.formBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  padding-top: calc(10vh);
+}
+
+.ant-alert {
+  width: calc(88vw);
+}
+
+.ant-alert-description {
+  display: flex !important;
+  align-items: flex-start;
+}
+
+
+
+div.ant-page-header {
+  background-color: white;
+  margin-right: calc(3vw);
+  margin-left: calc(3vw);
+}
+
+div.ant-table {
+  width: calc(90vw);
+}
+
+div.ant-card-head-title {
+  font-weight: bold
+}
+
+#app {
+  height: 100%;
+}
+
+body {
+  background-color: rgb(246, 250, 254);
+}

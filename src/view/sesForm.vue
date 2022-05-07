@@ -5,65 +5,35 @@
       <a-button type="" @click="logout">注销</a-button>
     </template>
   </a-page-header>
-  <div class="page">
-    <a-form
-      :model="sesInfo"
-      name="basic"
-      :label-col="{ span: 8 }"
-      :wrapper-col="{ span: 16 }"
-      autocomplete="off"
-      @finish="postSes"
-      @finishFailed="onFinishFailed"
-    >
-      <a-form-item
-        label="限制"
-        name="limit"
-        :gutter="[16, 64]"
-        :rules="[{ required: true, message: 'Please input your limit!' }]"
-      >
-        <a-input v-model:value="sesInfo.limit"></a-input>
-      </a-form-item>
+  <div class="narrPage">
+    <div class="formBox">
+      <a-form :model="sesInfo" name="basic" :label-col="{ span: 5 }" :wrapper-col="{ span: 16 }" autocomplete="off"
+        @finish="postSes" @finishFailed="onFinishFailed">
+        <a-form-item label="限制" name="limit" 
+          :rules="[{ required: true, message: 'Please input your limit!' }]">
+          <a-input v-model:value="sesInfo.limit"></a-input>
+        </a-form-item>
 
-      <a-form-item
-        label="地点"
-        name="position"
-        :gutter="[16, 64]"
-        :rules="[{ required: true, message: 'Please input your position!' }]"
-      >
-        <a-select
-          ref="select"
-          v-model:value="sesInfo.position"
-          style="width: 120px"
-          :options="options1"
-        ></a-select>
-      </a-form-item>
+        <a-form-item label="地点" name="position" 
+          :rules="[{ required: true, message: 'Please input your position!' }]">
+          <a-select ref="select" v-model:value="sesInfo.position"  :options="options1"></a-select>
+        </a-form-item>
 
-      <a-form-item
-        label="日期"
-        name="date"
-        :gutter="[16, 64]"
-        :format="dateFormat"
-        :rules="[{ required: true, message: 'Please input date!' }]"
-      >
-        <a-date-picker v-model:value="sesInfo.date" />
-      </a-form-item>
+        <a-form-item label="日期" name="date"  :format="dateFormat"
+          :rules="[{ required: true, message: 'Please input date!' }]">
+          <a-date-picker v-model:value="sesInfo.date" />
+        </a-form-item>
 
-      <a-form-item
-        label="时间"
-        name="time"
-        :gutter="[16, 64]"
-        :rules="[{ required: true, message: 'Please input time!' }]"
-      >
-        <a-time-range-picker
-          v-model:value="sesInfo.time"
-          :valueFormat="'HH:mm:ss'"
-        />
-      </a-form-item>
-
-      <a-form-item :wrapper-col="{ offset: 9, span: 13 }" :gutter="[16, 32]">
-        <a-button type="primary" html-type="submit" block>提交</a-button>
-      </a-form-item>
-    </a-form>
+        <a-form-item label="时间" name="time" 
+          :rules="[{ required: true, message: 'Please input time!' }]">
+          <a-time-range-picker v-model:value="sesInfo.time" :valueFormat="'HH:mm:ss'" />
+        </a-form-item>
+        <br>
+        <a-form-item :wrapper-col="{ offset: 7, span: 12 }" >
+          <a-button type="primary" html-type="submit" block>提交</a-button>
+        </a-form-item>
+      </a-form>
+    </div>
   </div>
 </template>
    

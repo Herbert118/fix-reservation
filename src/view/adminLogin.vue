@@ -1,38 +1,25 @@
 
 <template>
-  <a-page-header title="预约维修系统" sub-title="管理员登录"> </a-page-header>
-  <div class="page">
-    <a-form
-      :model="adminInfo"
-      name="basic"
-      :label-col="{ span: 8 }"
-      :wrapper-col="{ span: 16 }"
-      autocomplete="off"
-      @finish="adminLogin"
-      @finishFailed="onFinishFailed"
-    >
-      <a-form-item
-        label="账号"
-        name="account"
-        :gutter="[16, 64]"
-        :rules="[{ required: true, message: 'Please input your username!' }]"
-      >
-        <a-input v-model:value="adminInfo.account" />
-      </a-form-item>
+  <div class="container">
+    <a-card title="先锋维修预约系统-管理员登录" :bordered="false">
 
-      <a-form-item
-        label="密码"
-        name="password"
-        :gutter="[16, 64]"
-        :rules="[{ required: true, message: 'Please input your password!' }]"
-      >
-        <a-input-password v-model:value="adminInfo.password" />
-      </a-form-item>
+      <a-form :model="adminInfo" name="basic"  :wrapper-col="{ offset:1,span: 22 }" autocomplete="off"
+        @finish="adminLogin" @finishFailed="onFinishFailed">
+        <a-form-item name="account" 
+          :rules="[{ required: true, message: 'Please input your account!' }]">
+          <a-input v-model:value="adminInfo.account" placeholder="管理员账号" />
+        </a-form-item>
 
-      <a-form-item :wrapper-col="{ offset: 9, span: 13 }" :gutter="[16, 32]">
-        <a-button type="primary" html-type="submit" block>登录</a-button>
-      </a-form-item>
-    </a-form>
+        <a-form-item  name="password" 
+          :rules="[{ required: true, message: 'Please input your password!' }]">
+          <a-input-password v-model:value="adminInfo.password" placeholder="密码"/>
+        </a-form-item>
+
+        <a-form-item :wrapper-col="{ offset: 6, span: 12 }" :gutter="[16, 32]">
+          <a-button type="primary" html-type="submit" block>登录</a-button>
+        </a-form-item>
+      </a-form>
+    </a-card>
   </div>
 </template>
    
@@ -63,13 +50,14 @@ export default defineComponent({
 @import "../assets/css/stylesheet.css";
 
 .ant-form {
-  width: calc(50vw);
+  width: calc(25vw);
+
 }
 
-.ant-space {
-  width: 100%;
+.ant-input {
+  height: calc(5vh) 
 }
-.ant-page-header {
-  border: solid 1px gainsboro;
+.ant-input-password{
+  height: calc(5vh) 
 }
 </style>
