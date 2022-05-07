@@ -37,12 +37,12 @@ export default defineComponent({
   props: {},
   setup() {
     const router = useRouter();
-    const baseUrl = process.env.VUE_APP_BASEURL;
-
+    
+    const token = store.state.userAuth;
     //data
     const { rsvInfo, submitRsv } = useReservations(
-      { baseUrl },
-      { message, router }
+      { token },
+      { message,  undefined}
     );
     //method
 

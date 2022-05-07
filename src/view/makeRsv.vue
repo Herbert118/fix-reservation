@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import { defineComponent, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import useSessions from "../composables/useSessions";
@@ -48,7 +48,7 @@ export default defineComponent({
     const router = useRouter();
     const store = useStore();
     const token = store.state.userAuth;
-    const baseUrl = process.env.VUE_APP_BASEURL;
+    
 
     const logout = () => {
       store.commit("setUserAuth", "");
@@ -58,16 +58,21 @@ export default defineComponent({
 
     //data
     const { sessions, sesColumns, getSes } = useSessions(
-      { baseUrl, token },
+      {  token },
       { logout, message }
     );
-    const { reservations, rsvColumns, cancelRsv, ifAlreadyRsv } =
-      useReservations({ baseUrl }, { message, getSes, router });
+
+    sesColumns.pop();//operation2
+
+    const { reservations, rsvColumns, cancelRsv, ifAlreadyRsv,getRsvByEmail } =
+      useReservations({token }, { message, getSes});
 
     //method
     const reserve = (sesID, position) => {
       router.push({ path: "/user/rsvForm", query: { sesID, position } });
     };
+
+    onMounted(getRsvByEmail);
 
     return {
       ifAlreadyRsv,

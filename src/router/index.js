@@ -8,6 +8,7 @@ import manageSes from "@/view/manageSes.vue"
 import makeRsv from "@/view/makeRsv.vue"
 import rsvForm from "@/view/rsvForm.vue"
 import sesForm from "@/view/sesForm.vue"
+import rsvTable from "@/view/rsvTable.vue"
 import userAuth from "@/view/userAuth.vue"
 import useUserAuth from "@/composables/useUserAuth"
 import useAdminAuth from "@/composables/useAdminAuth"
@@ -59,6 +60,11 @@ const routes = [{
     "name": "sesForm",
     "component": sesForm,
     "beforeEnter": ifAdminTokenStored
+},{
+    "path":"/admin/rsvTable",
+    "name":"rsvTable",
+    "component":rsvTable,
+    "beforeEnter":ifAdminTokenStored
 },
 {
     "path": "/",

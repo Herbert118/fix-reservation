@@ -1,12 +1,12 @@
-import { ref, onMounted, reactive } from 'vue'
+import { ref, reactive } from 'vue'
 import axios from "axios"
 import { useStore } from 'vuex';
-
+import router from "../router"
 export default function useReservations(info, depend) {
   const store = useStore()
-  const { baseUrl } = info;
-  const { message, getSes, router } = depend;
-  const token = store.state.userAuth;
+  const baseUrl = process.env.VUE_APP_BASEURL;
+  const { token } = info;
+  const { message, getSes } = depend;
   //data
   const rsvInfo = reactive({
     model: "",
@@ -49,8 +49,10 @@ export default function useReservations(info, depend) {
         if (res.data.msg === "success") {
           message.info("cancelRsv success");
           getSes();
-          getRsv();
-        } else[message.warn("cancel fail")];
+          getRsvByEmail();
+        } else {
+          message.warn("cancel fail")
+        }
       })
       .catch((e) => {
         console.log(e);
@@ -58,7 +60,7 @@ export default function useReservations(info, depend) {
       });
   };
 
-  const getRsv = () => {
+  const getRsvByEmail = () => {
     const url2 = baseUrl + "/api/rsv";
     const email = store.state.userInfo.userEmail;
 
@@ -82,6 +84,29 @@ export default function useReservations(info, depend) {
           ifAlreadyRsv.value = false;
         }
         console.log(ifAlreadyRsv);
+      })
+      .catch((e) => {
+        message.warn("rsv error");
+        console.log(e);
+      });
+  };
+
+
+  const getRsvBySes = () => {
+    const url2 = baseUrl + "/api/rsv"
+    const sesID = router.currentRoute.value.query.sesID
+    axios
+      .get(url2, {
+        headers: {
+          Authorization: `${token}`,
+        },
+        params: {
+          sesID,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        reservations.value = res.data;
       })
       .catch((e) => {
         message.warn("rsv error");
@@ -120,16 +145,17 @@ export default function useReservations(info, depend) {
 
 
 
-  onMounted(getRsv);
+
 
   return {
     ifAlreadyRsv,
     reservations,
     rsvInfo,
-    getRsv,
+    getRsvByEmail,
     cancelRsv,
     rsvColumns,
-    submitRsv
+    submitRsv,
+    getRsvBySes
 
 
   }

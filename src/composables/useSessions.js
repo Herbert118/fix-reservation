@@ -3,7 +3,8 @@ import axios from "axios"
 import dayjs from 'dayjs';
 
 export default function useSessions(info, depend) {
-  const { baseUrl, token } = info;
+  const baseUrl = process.env.VUE_APP_BASEURL;
+  const {  token } = info;
   const { logout, message } = depend;
 
   //data
@@ -47,7 +48,11 @@ export default function useSessions(info, depend) {
   {
     title: "operation",
     dataIndex: "operation",
-  },]);
+  },{
+    title: "operation2",
+    dataIndex: "operation2",
+  }
+]);
 
   //method
   const postSes = () => {

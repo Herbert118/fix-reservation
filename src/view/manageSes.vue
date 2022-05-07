@@ -15,6 +15,9 @@
             <a-button type="">Delete</a-button>
           </a-popconfirm>
         </template>
+        <template v-if="column.dataIndex === 'operation2'">
+            <a-button @click="viewRsvInSes(record.sesID)">查看预约</a-button>
+        </template>
       </template>
     </a-table>
 
@@ -32,7 +35,6 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const token = store.state.adminAuth;
-    const baseUrl = process.env.VUE_APP_BASEURL;
     const router = useRouter();
 
     const logout = () => {
@@ -41,7 +43,7 @@ export default defineComponent({
     };
 
     //useSessions
-    const info = { baseUrl, token };
+    const info = {  token };
     const depend = { logout, message };
     const { sessions, sesColumns, getSes, deleteSes } = useSessions(
       info,
@@ -52,6 +54,10 @@ export default defineComponent({
       router.push("/admin/sesForm");
     };
 
+    const viewRsvInSes = (sesID) =>{
+      router.push({ path: "/admin/rsvTable", query: { sesID} })
+    }
+
     return {
       sessions,
       sesColumns,
@@ -59,6 +65,7 @@ export default defineComponent({
       deleteSes,
       handleAdd,
       logout,
+      viewRsvInSes
     };
   },
 });
