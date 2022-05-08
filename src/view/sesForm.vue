@@ -7,29 +7,29 @@
   </a-page-header>
   <div class="narrPage">
     <div class="formBox">
-      <a-form :model="sesInfo" name="basic" :label-col="{ span: 5 }" :wrapper-col="{ span: 16 }" autocomplete="off"
+      <a-form :model="sesInfo" name="basic" :label-col="{ span: 5 }" :wrapper-col="{ offset:1,span: 13 }" autocomplete="off"
         @finish="postSes" @finishFailed="onFinishFailed">
-        <a-form-item label="限制" name="limit" 
-          :rules="[{ required: true, message: 'Please input your limit!' }]">
-          <a-input v-model:value="sesInfo.limit"></a-input>
+        <a-form-item label="人数限制" name="limit" 
+          :rules="[{ required: true, message: '请输入人数限制!' }]">
+          <a-input v-model:value="sesInfo.limit" type="number"></a-input>
         </a-form-item>
 
         <a-form-item label="地点" name="position" 
-          :rules="[{ required: true, message: 'Please input your position!' }]">
+          :rules="[{ required: true, message: '请选择位置!' }]">
           <a-select ref="select" v-model:value="sesInfo.position"  :options="options1"></a-select>
         </a-form-item>
 
         <a-form-item label="日期" name="date"  :format="dateFormat"
-          :rules="[{ required: true, message: 'Please input date!' }]">
+          :rules="[{ required: true, message: '请输入日期!' }]">
           <a-date-picker v-model:value="sesInfo.date" />
         </a-form-item>
 
         <a-form-item label="时间" name="time" 
-          :rules="[{ required: true, message: 'Please input time!' }]">
+          :rules="[{ required: true, message: '请输入时间!' }]">
           <a-time-range-picker v-model:value="sesInfo.time" :valueFormat="'HH:mm:ss'" />
         </a-form-item>
         <br>
-        <a-form-item :wrapper-col="{ offset: 7, span: 12 }" >
+        <a-form-item :wrapper-col="{ offset: 7, span: 11 }" >
           <a-button type="primary" html-type="submit" block>提交</a-button>
         </a-form-item>
       </a-form>

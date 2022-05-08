@@ -24,7 +24,6 @@ export default function useUserAuth(info, depend) {
         timeout: 10000
       })
       .then((res) => {
-        console.log(res.data)
         if (res.data.msg === "success") {
           message.info("邮件已发送")
         }
@@ -50,8 +49,6 @@ export default function useUserAuth(info, depend) {
           }
         })
         .then((res) => {
-
-          console.log(res.data)
           store.commit("setUserAuth", router.currentRoute.value.query.token);
           store.commit("setUserInfo", { userID: `${res.data.id}`, userEmail: `${res.data.email}` })
           router.push("/user/makeRsv")

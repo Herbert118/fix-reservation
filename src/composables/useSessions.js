@@ -8,6 +8,7 @@ export default function useSessions(info, depend) {
   const { logout, message } = depend;
 
   //data
+  const positionArr = ['null','浑南','南湖']
   const dateFormat = "YYYY-MM-DD"
   const sessions = ref([]);
   const sesInfo = reactive({
@@ -18,31 +19,31 @@ export default function useSessions(info, depend) {
     time: []
   });
   const sesColumns = reactive([{
-    title: "sesID",
+    title: "场次ID",
     dataIndex: "sesID",
     width:'15%',
   },
   {
-    title: "date",
+    title: "日期",
     dataIndex: "date",
     width:'20%',
   },
   {
-    title: "startTime",
+    title: "开始时间",
     dataIndex: "startTime",
     width:'20%',
   },
   {
-    title: "endTime",
+    title: "结束时间",
     dataIndex: "endTime",
     width:'20%',
   },
   {
-    title: "position",
-    dataIndex: "position",
+    title: "位置",
+    dataIndex: "positionText",
   },
   {
-    title: "limit",
+    title: "人数限制",
     dataIndex: "limit",
   },
   {
@@ -91,10 +92,13 @@ export default function useSessions(info, depend) {
       })
       .then((res) => {
         sessions.value = res.data
-        console.log(sessions.value)
+       
+       for(let i = 0; i<sessions.value.length;i++ ){
+         sessions.value[i].positionText = positionArr[sessions.value[i].position];
+       }//change to text
       })
       .catch((e) => {
-        message.warn(e.response.data.msg)
+        message.warn(e)
         if (e.response.status == 401) {
           logout()
         }
@@ -118,7 +122,7 @@ export default function useSessions(info, depend) {
         getSes()
       })
       .catch(() => {
-        message.warn("delete fail")
+        message.warn("删除失败")
       })
   }
 

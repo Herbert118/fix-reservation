@@ -10,7 +10,7 @@
       <a-form :model="rsvInfo" name="basic" :label-col="{ offset: 0, span: 0 }" :wrapper-col="{ offset: 1, span: 20 }"
         autocomplete="off" @finish="submitRsv" @finishFailed="submitRsvFailed">
         <a-form-item label="型号" name="model" :rules="[{ required: true, message: 'Please input your model!' }]">
-          <a-input v-model:value="rsvInfo.model" placeholder="电脑型号"/>
+          <a-input v-model:value="rsvInfo.model" placeholder="电脑型号" />
         </a-form-item>
 
         <a-form-item label="问题" name="question" :rules="[{ required: true, message: 'Please input your question!' }]">
@@ -37,12 +37,12 @@ export default defineComponent({
   props: {},
   setup() {
     const router = useRouter();
-    
+
     const token = store.state.userAuth;
     //data
     const { rsvInfo, submitRsv } = useReservations(
       { token },
-      { message,  undefined}
+      { message, undefined }
     );
     //method
 

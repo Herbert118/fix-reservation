@@ -6,7 +6,7 @@
   </a-page-header>
   <div class="page">
      <a-alert
-    description="注意选择合适的时间哦"
+    :description="infoText"
     type="info"
     show-icon
   />
@@ -28,7 +28,9 @@
     >
       <template #bodyCell="{ column, record }">
         <template v-if="column.title == 'operation'">
-          <a-button type="" @click="cancelRsv(record.id)">取消</a-button>
+          <a-popconfirm v-if="sessions.length" title="确定取消吗?" @confirm="cancelRsv(record.id)">
+            <a-button type="">取消</a-button>
+          </a-popconfirm>
         </template>
       </template>
     </a-table>
@@ -64,7 +66,7 @@ export default defineComponent({
 
     sesColumns.pop();//operation2
 
-    const { reservations, rsvColumns, cancelRsv, ifAlreadyRsv,getRsvByEmail } =
+    const { reservations, rsvColumns, cancelRsv, ifAlreadyRsv,getRsvByEmail, infoText } =
       useReservations({token }, { message, getSes});
 
     //method
@@ -80,9 +82,11 @@ export default defineComponent({
       reservations,
       sesColumns,
       rsvColumns,
+      infoText,
       reserve,
       logout,
       cancelRsv,
+      
     };
   },
 });

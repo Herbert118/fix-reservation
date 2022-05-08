@@ -11,12 +11,12 @@
     <a-table bordered :data-source="sessions" :columns="sesColumns">
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'operation'">
-          <a-popconfirm v-if="sessions.length" title="Sure to delete?" @confirm="deleteSes(record.sesID)">
-            <a-button type="">Delete</a-button>
+          <a-popconfirm v-if="sessions.length" title="确定删除吗?" @confirm="deleteSes(record.sesID)">
+            <a-button type="">删除</a-button>
           </a-popconfirm>
         </template>
         <template v-if="column.dataIndex === 'operation2'">
-            <a-button @click="viewRsvInSes(record.sesID)">查看预约</a-button>
+          <a-button @click="viewRsvInSes(record.sesID)">查看预约</a-button>
         </template>
       </template>
     </a-table>
@@ -43,7 +43,7 @@ export default defineComponent({
     };
 
     //useSessions
-    const info = {  token };
+    const info = { token };
     const depend = { logout, message };
     const { sessions, sesColumns, getSes, deleteSes } = useSessions(
       info,
@@ -54,8 +54,8 @@ export default defineComponent({
       router.push("/admin/sesForm");
     };
 
-    const viewRsvInSes = (sesID) =>{
-      router.push({ path: "/admin/rsvTable", query: { sesID} })
+    const viewRsvInSes = (sesID) => {
+      router.push({ path: "/admin/rsvTable", query: { sesID } })
     }
 
     return {
@@ -73,13 +73,14 @@ export default defineComponent({
 
 <style scoped>
 div.btnArea {
-  width:100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   padding: calc(2vh) calc(4vw) calc(3vh) 0;
 }
-.ant-btn-primary{
-  width:calc(7vw)
+
+.ant-btn-primary {
+  width: calc(7vw)
 }
 </style>

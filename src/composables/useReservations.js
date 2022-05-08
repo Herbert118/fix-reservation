@@ -14,19 +14,22 @@ export default function useReservations(info, depend) {
   });
   const ifAlreadyRsv = ref(false)
   const reservations = ref([])
-
+  let infoText = ref('')
   const rsvColumns = [
     {
-      title: "rsvID",
+      title: "预约ID",
       dataIndex: "id",
+      width:"12%"
     },
     {
-      title: "model",
+      title: "型号",
       dataIndex: "model",
+      width:"20%"
     },
     {
-      title: "question",
+      title: "问题",
       dataIndex: "question",
+      width:"60%"
     },
     {
       title: "operation",
@@ -47,11 +50,11 @@ export default function useReservations(info, depend) {
       })
       .then((res) => {
         if (res.data.msg === "success") {
-          message.info("cancelRsv success");
+          message.info("取消成功");
           getSes();
           getRsvByEmail();
         } else {
-          message.warn("cancel fail")
+          message.warn("取消失败")
         }
       })
       .catch((e) => {
@@ -74,19 +77,17 @@ export default function useReservations(info, depend) {
         },
       })
       .then((res) => {
-        console.log(res.data);
-        // if (res.data.reservations) { //may be changed
         if (res.data.length) {
           ifAlreadyRsv.value = true;
-          //reservations.value = res.data.reservations
           reservations.value = res.data;
+          infoText.value = "请注意预约的时间, 及时到场哦"
         } else {
           ifAlreadyRsv.value = false;
+          infoText.value = "请注意选择合适的时间和地点哦"
         }
-        console.log(ifAlreadyRsv);
       })
       .catch((e) => {
-        message.warn("rsv error");
+        message.warn("获取预约信息失败");
         console.log(e);
       });
   };
@@ -105,11 +106,10 @@ export default function useReservations(info, depend) {
         },
       })
       .then((res) => {
-        console.log(res.data);
         reservations.value = res.data;
       })
       .catch((e) => {
-        message.warn("rsv error");
+        message.warn("获取预约信息失败");
         console.log(e);
       });
   };
@@ -138,25 +138,20 @@ export default function useReservations(info, depend) {
         router.push("/user/makeRsv")
       })
       .catch((e) => {
-        message.warning(e)
+        message.warning("预约失败")
+        console(e)
       })
-
   };
-
-
-
-
 
   return {
     ifAlreadyRsv,
     reservations,
     rsvInfo,
+    rsvColumns,
+    infoText,
     getRsvByEmail,
     cancelRsv,
-    rsvColumns,
     submitRsv,
     getRsvBySes
-
-
   }
 }
