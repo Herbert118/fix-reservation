@@ -57,7 +57,7 @@ export default function useAdminAuth(info, depend) {
         router.push("/admin/manageSes")
       })
       .catch((e) => {
-        console.warn(e.response.data.msg)
+        console.warn(e.response)
         if (e.response.status == 401) {
           logout()
         }
