@@ -1,7 +1,7 @@
 <template>
-    <a-page-header title="预约维修系统" sub-title="查看预约信息">
+    <a-page-header title="先锋维修预约系统" sub-title="查看预约信息" @back="() => $router.push('/admin/manageSes')">
         <template #extra>
-            <a-button type="" @click="logout">注销</a-button>
+            <a-button type="" @click="adminLogout">注销</a-button>
         </template>
     </a-page-header>
     <div class="page">
@@ -20,25 +20,26 @@
 <script>
 import { defineComponent, onMounted } from 'vue'
 import useReservations from "../composables/useReservations"
-import { message } from 'ant-design-vue';
-import { useStore } from "vuex"
+import { message } from 'ant-design-vue'
+import useAdminAuth from '@/composables/useAdminAuth'
 
 export default defineComponent({
     setup() {
-        const store = useStore();
-        const token = store.state.adminAuth;
-
+        const { adminToken, adminLogout } = useAdminAuth({}, { message })
+        const token = adminToken
+        
         const { reservations,
             rsvColumns,
             cancelRsv,
-            getRsvBySes } = useReservations({ token }, { message, undefined });
+            getRsvBySes } = useReservations({ token }, { message, undefined })
 
-        onMounted(getRsvBySes);
+        onMounted(getRsvBySes)
 
         return {
             reservations,
             rsvColumns,
-            cancelRsv
+            cancelRsv,
+            adminLogout
 
         }
 

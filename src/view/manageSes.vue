@@ -1,7 +1,7 @@
 <template>
-  <a-page-header title="预约维修系统" sub-title="管理预约">
+  <a-page-header title="先锋维修预约系统" sub-title="管理预约">
     <template #extra>
-      <a-button type="" @click="logout">注销</a-button>
+      <a-button type="" @click="adminLogout">注销</a-button>
     </template>
   </a-page-header>
   <div class="page">
@@ -10,13 +10,13 @@
     </div>
     <a-table bordered :data-source="sessions" :columns="sesColumns">
       <template #bodyCell="{ column, record }">
-        <template v-if="column.dataIndex === 'operation'">
+        <template v-if="column.dataIndex === 'op'">
           <a-popconfirm v-if="sessions.length" title="确定删除吗?" @confirm="deleteSes(record.sesID)">
             <a-button type="">删除</a-button>
           </a-popconfirm>
         </template>
-        <template v-if="column.dataIndex === 'operation2'">
-          <a-button @click="viewRsvInSes(record.sesID)">查看预约</a-button>
+        <template v-if="column.dataIndex === 'op2'">
+          <a-button @click="viewRsvInSes(record.sesID)">查看</a-button>
         </template>
       </template>
     </a-table>
@@ -25,38 +25,27 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
-import { useStore } from "vuex";
-import { message } from "ant-design-vue";
-import { useRouter } from "vue-router";
-import useSessions from "@/composables/useSessions";
+import { defineComponent, onMounted } from "vue"
+import { message } from "ant-design-vue"
+import useSessions from "@/composables/useSessions"
+import useAdminAuth from "@/composables/useAdminAuth"
 export default defineComponent({
   props: {},
   setup() {
-    const store = useStore();
-    const token = store.state.adminAuth;
-    const router = useRouter();
-
-    const logout = () => {
-      store.commit("setAdminAuth", "");
-      router.push("/admin/login");
-    };
-
+    const { adminToken, adminLogout } = useAdminAuth({},{message})
+    const token = adminToken
+    const logout = adminLogout
     //useSessions
-    const info = { token };
-    const depend = { logout, message };
-    const { sessions, sesColumns, getSes, deleteSes } = useSessions(
+    const info = { token }
+    const depend = { logout, message }
+    const { sessions, sesColumns, getSes, deleteSes, handleAdd, viewRsvInSes } = useSessions(
       info,
       depend
-    );
+    )
 
-    const handleAdd = () => {
-      router.push("/admin/sesForm");
-    };
+    
 
-    const viewRsvInSes = (sesID) => {
-      router.push({ path: "/admin/rsvTable", query: { sesID } })
-    }
+    onMounted(getSes)
 
     return {
       sessions,
@@ -64,11 +53,11 @@ export default defineComponent({
       getSes,
       deleteSes,
       handleAdd,
-      logout,
+      adminLogout,
       viewRsvInSes
-    };
+    }
   },
-});
+})
 </script>
 
 <style scoped>
@@ -81,6 +70,13 @@ div.btnArea {
 }
 
 .ant-btn-primary {
-  width: calc(7vw)
+  width: calc(12vw)
+}
+
+@media screen and (max-width:650px) {
+  .ant-btn-primary {
+    width: calc(15vw)
+  }
+
 }
 </style>

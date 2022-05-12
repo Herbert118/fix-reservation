@@ -7,25 +7,33 @@ export default function useAdminAuth(info, depend) {
 
   console.log(info)
   const { message } = depend
+
   //data
   const adminInfo = reactive({
     account: "",
     password: "",
   })
 
+  const adminToken = store.state.adminAuth;
+
+  
   //method
 
 
-  const logout = () => {
-    store.commit("setAdminAuth", "");
-    router.push("/admin/login");
-  };
+  
 
 
   const adminLogin = () => {
     const url = `${process.env.VUE_APP_BASEURL}/api/adminLogin`
     const payload = {
       ...adminInfo
+    }
+
+    for(let prop in payload){
+      if(payload[prop] === null||payload[prop] === ''){
+        message.warn("请将表单填写完整!")
+        return
+      }
     }
 
     axios
@@ -37,11 +45,17 @@ export default function useAdminAuth(info, depend) {
         router.push("/admin/manageSes")
       })
       .catch((e) => {
-        console.log(e)
-        message.warning("登录失败")
+        console.warn(e)
+        message.warn("登录失败")
       })
   }
 
+  const adminLogout = () => {
+    store.commit("setAdminAuth", "")
+    router.push("/admin/login")
+  }
+
+  //used in router
   const checkAdminAuth = () => {
     const baseUrl = `${process.env.VUE_APP_BASEURL}`
     const token = store.state.adminAuth
@@ -59,7 +73,7 @@ export default function useAdminAuth(info, depend) {
       .catch((e) => {
         console.warn(e.response)
         if (e.response.status == 401) {
-          logout()
+          adminLogout()
         }
       })
   }
@@ -72,10 +86,12 @@ export default function useAdminAuth(info, depend) {
 
   return {
     adminInfo,
+    adminToken,
+
+    adminLogout,
     adminLogin,
     checkAdminAuth,
     ifAdminTokenStored
-
   }
 
 }

@@ -1,7 +1,7 @@
 <template>
-  <a-page-header title="预约维修系统" sub-title="预约维修">
+  <a-page-header title="先锋维修预约系统" sub-title="预约维修">
     <template #extra>
-      <a-button type="" @click="logout">注销</a-button>
+      <a-button type="" @click="userLogout">注销</a-button>
     </template>
   </a-page-header>
   <div class="page">
@@ -13,7 +13,7 @@
   <br>
     <a-table class="sesTable" :dataSource="sessions" :columns="sesColumns" v-if="!ifAlreadyRsv">
       <template #bodyCell="{ column, record }">
-        <template v-if="column.title == 'operation'">
+        <template v-if="column.title == 'op'">
           <a-button type="" @click="reserve(record.sesID, record.position)"
             >预约</a-button
           >
@@ -28,7 +28,7 @@
     >
       <template #bodyCell="{ column, record }">
         <template v-if="column.title == 'operation'">
-          <a-popconfirm v-if="sessions.length" title="确定取消吗?" @confirm="cancelRsv(record.id)">
+          <a-popconfirm v-if="reservations.length" title="确定取消吗?" @confirm="cancelRsv(record.id)">
             <a-button type="">取消</a-button>
           </a-popconfirm>
         </template>
@@ -38,43 +38,34 @@
 </template>
 
 <script>
-import { defineComponent, onMounted } from "vue";
-import { useRouter } from "vue-router";
-import { useStore } from "vuex";
-import useSessions from "../composables/useSessions";
-import useReservations from "../composables/useReservations";
-import { message } from "ant-design-vue";
+import { defineComponent, onMounted } from "vue"
+import useUserAuth from "@/composables/useUserAuth"
+import useSessions from "../composables/useSessions"
+import useReservations from "../composables/useReservations"
+import { message } from "ant-design-vue"
 export default defineComponent({
   props: {},
   setup() {
-    const router = useRouter();
-    const store = useStore();
-    const token = store.state.userAuth;
-    
 
-    const logout = () => {
-      store.commit("setUserAuth", "");
-      store.commit("setUserInfo", {});
-      router.push("/user/login");
-    };
-
+  const {userLogout, userToken} =  useUserAuth({},{message})
+  const logout = userLogout
+  const token = userToken
     //data
     const { sessions, sesColumns, getSes } = useSessions(
       {  token },
       { logout, message }
-    );
+    )
 
-    sesColumns.pop();//operation2
+    sesColumns.pop()//operation2
 
-    const { reservations, rsvColumns, cancelRsv, ifAlreadyRsv,getRsvByEmail, infoText } =
-      useReservations({token }, { message, getSes});
+    const { reservations, rsvColumns, cancelRsv, ifAlreadyRsv,getRsvByEmail, infoText, reserve } =
+      useReservations({token }, { message, getSes})
 
-    //method
-    const reserve = (sesID, position) => {
-      router.push({ path: "/user/rsvForm", query: { sesID, position } });
-    };
+  
+    
 
-    onMounted(getRsvByEmail);
+    onMounted(getRsvByEmail)
+    onMounted(getSes)
 
     return {
       ifAlreadyRsv,
@@ -84,10 +75,10 @@ export default defineComponent({
       rsvColumns,
       infoText,
       reserve,
-      logout,
+      userLogout,
       cancelRsv,
       
-    };
+    }
   },
-});
+})
 </script>

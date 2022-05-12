@@ -1,6 +1,7 @@
-import { ref, onMounted, reactive } from 'vue'
+import { ref, reactive } from 'vue'
 import axios from "axios"
 import dayjs from 'dayjs';
+import router from '@/router';
 
 export default function useSessions(info, depend) {
   const baseUrl = process.env.VUE_APP_BASEURL;
@@ -9,6 +10,16 @@ export default function useSessions(info, depend) {
 
   //data
   const positionArr = ['null','浑南','南湖']
+  const positionOptions = ref([
+    {
+      value: "1",
+      label: "浑南校区",
+    },
+    {
+      value: "2",
+      label: "南湖校区",
+    },
+  ])
   const dateFormat = "YYYY-MM-DD"
   const sessions = ref([]);
   const sesInfo = reactive({
@@ -21,7 +32,7 @@ export default function useSessions(info, depend) {
   const sesColumns = reactive([{
     title: "场次ID",
     dataIndex: "sesID",
-    width:'15%',
+    width:'10%',
   },
   {
     title: "日期",
@@ -31,31 +42,40 @@ export default function useSessions(info, depend) {
   {
     title: "开始时间",
     dataIndex: "startTime",
-    width:'20%',
+    width:'18%',
   },
   {
     title: "结束时间",
     dataIndex: "endTime",
-    width:'20%',
+    width:'18%',
   },
   {
     title: "位置",
     dataIndex: "positionText",
+    width:"10%"
   },
   {
     title: "人数限制",
     dataIndex: "limit",
+  },{
+    title:"已预约",
+    dataIndex:"num",
   },
   {
-    title: "operation",
-    dataIndex: "operation",
+    title: "op",
+    dataIndex: "op",
   },{
-    title: "operation2",
-    dataIndex: "operation2",
+    title: "op2",
+    dataIndex: "op2",
   }
 ]);
 
   //method
+
+  const handleAdd = () => {
+    router.push("/admin/sesForm")
+  }
+
   const postSes = () => {
     const url = baseUrl + "/api/ses"
     const payload = {
@@ -64,8 +84,15 @@ export default function useSessions(info, depend) {
       date: sesInfo.date.format(dateFormat),
       startTime: sesInfo.time[0],
       endTime: sesInfo.time[1],
-
     }
+
+    for(let prop in payload){
+      if(payload[prop] === null||payload[prop] === ''){
+        message.warn("请将表单填写完整!");
+        return;
+      }
+    }
+
     axios
       .post(url, payload, {
         headers: {
@@ -75,12 +102,18 @@ export default function useSessions(info, depend) {
       })
       .then((res) => {
         message.info(res.data.msg)
+        router.push("/admin/manageSes")
       })
       .catch((e) => {
         message.warn("提交失败")
         console.log(e)
       })
   }
+
+  const viewRsvInSes = (sesID) => {
+    router.push({ path: "/admin/rsvTable", query: { sesID } })
+  }
+
 
   const getSes = () => {
     const url = baseUrl + "/api/ses"
@@ -126,15 +159,21 @@ export default function useSessions(info, depend) {
       })
   }
 
-  onMounted(getSes);
+  
+
+  
+  
 
   return {
     sessions,
     sesInfo,
     sesColumns,
+    positionOptions,
     postSes,
     getSes,
     deleteSes,
+    handleAdd,
+    viewRsvInSes
 
 
   }

@@ -5,15 +5,25 @@ import router from '../router'
 export default function useUserAuth(info, depend) {
   const { message } = depend
   console.log(info)
+
   //data
-  const userInfo = reactive({
+  const userFormData = reactive({
     stuEmail: "20206824@stu.neu.edu.cn",
   })
+
+  const userToken = store.state.userAuth
+
+  const userInfo = store.state.userInfo
   //method
   const userLogin = () => {
     const url = `${process.env.VUE_APP_BASEURL}/api/userLogin`
     const payload = {
-      email: userInfo.stuEmail,
+      email: userFormData.stuEmail,
+    }
+
+    if(!userFormData.stuEmail.match("^\\d{8}@stu\\.neu\\.edu\\.cn$")){
+      message.warn("邮箱格式错误");
+      return;
     }
 
     axios
@@ -55,7 +65,7 @@ export default function useUserAuth(info, depend) {
         })
         .catch((e) => {
           message.warn("error:user Auth fail")
-          console.log(e)
+          console.warn(e)
         })
 
     }
@@ -86,13 +96,23 @@ export default function useUserAuth(info, depend) {
       router.push("/user/login")
     }
   }
+  const userLogout = () => {
+    store.commit("setUserAuth", "");
+    store.commit("setUserInfo", {});
+    router.push("/user/login");
+  };
+  
 
 
   return {
+    userToken,
     userInfo,
+
+    userFormData,
     userAuth,
     userLogin,
     checkUserAuth,
     ifUserTokenStored,
+    userLogout
   }
 }

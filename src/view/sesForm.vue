@@ -1,107 +1,81 @@
 
 <template>
-  <a-page-header title="预约维修系统" sub-title="填写场次信息">
+  <a-page-header title="先锋维修预约系统" sub-title="填写场次信息" @back="() => $router.push('/admin/manageSes')">
     <template #extra>
-      <a-button type="" @click="logout">注销</a-button>
+      <a-button type="" @click="adminLogout">注销</a-button>
     </template>
   </a-page-header>
   <div class="narrPage">
     <div class="formBox">
-      <a-form :model="sesInfo" name="basic" :label-col="{ span: 5 }" :wrapper-col="{ offset:1,span: 13 }" autocomplete="off"
-        @finish="postSes" @finishFailed="onFinishFailed">
-        <a-form-item label="人数限制" name="limit" 
-          :rules="[{ required: true, message: '请输入人数限制!' }]">
-          <a-input v-model:value="sesInfo.limit" type="number"></a-input>
-        </a-form-item>
-
-        <a-form-item label="地点" name="position" 
-          :rules="[{ required: true, message: '请选择位置!' }]">
-          <a-select ref="select" v-model:value="sesInfo.position"  :options="options1"></a-select>
-        </a-form-item>
-
-        <a-form-item label="日期" name="date"  :format="dateFormat"
-          :rules="[{ required: true, message: '请输入日期!' }]">
-          <a-date-picker v-model:value="sesInfo.date" />
-        </a-form-item>
-
-        <a-form-item label="时间" name="time" 
-          :rules="[{ required: true, message: '请输入时间!' }]">
-          <a-time-range-picker v-model:value="sesInfo.time" :valueFormat="'HH:mm:ss'" />
-        </a-form-item>
-        <br>
-        <a-form-item :wrapper-col="{ offset: 7, span: 11 }" >
-          <a-button type="primary" html-type="submit" block>提交</a-button>
-        </a-form-item>
-      </a-form>
+      <div class="formArea">
+        <a-row>
+          <a-col :span="24">
+            <a-input v-model:value="sesInfo.limit" type="number" placeholder="人数限制"></a-input>
+          </a-col>
+        </a-row>
+        <a-row>
+          <a-col :span="24">
+            <a-select ref="select" v-model:value="sesInfo.position" :options="positionOptions" block></a-select>
+          </a-col>
+        </a-row>
+        <a-row>
+          <a-col :span="24">
+            <a-date-picker v-model:value="sesInfo.date" :placeholder="'日期'" />
+          </a-col>
+        </a-row>
+        <a-row>
+          <a-col :span="24">
+            <a-time-range-picker v-model:value="sesInfo.time" :valueFormat="'HH:mm:ss'" :placeholder='["开始", "结束"]' />
+          </a-col>
+        </a-row>
+        <a-row>
+          <a-col :span="24">
+            <a-button type="primary" @click="postSes" block>提交</a-button>
+          </a-col>
+        </a-row>
+      </div>
     </div>
   </div>
 </template>
    
 
 <script>
-import { defineComponent, ref } from "vue";
-import { useStore } from "vuex";
-import { message } from "ant-design-vue";
-import { useRouter } from "vue-router";
+import { defineComponent } from "vue"
 
-import useSessions from "@/composables/useSessions";
+import { message } from "ant-design-vue"
+
+import useSessions from "@/composables/useSessions"
+import useAdminAuth from "@/composables/useAdminAuth"
 export default defineComponent({
   props: {},
   setup() {
-    const store = useStore();
-    const baseUrl = process.env.VUE_APP_BASEURL;
-    const token = store.state.adminAuth;
-    const router = useRouter();
-    const options1 = ref([
-      {
-        value: "1",
-        label: "浑南校区",
-      },
-      {
-        value: "2",
-        label: "南湖校区",
-      },
-    ]);
 
-    const logout = () => {
-      store.commit("setAdminAuth", "");
-      router.push("/admin/login");
-    };
+
+
+
+    const { adminLogout, adminToken } = useAdminAuth({}, { message })
+    const logout = adminLogout
+    const token = adminToken
     //useSessions
 
-    const info = { baseUrl, token };
-    const depend = { logout, message };
-    const { sesInfo, postSes, dateFormat } = useSessions(info, depend);
+    const info = { token }
+    const depend = { logout, message }
+    const { sesInfo, postSes, dateFormat, positionOptions } = useSessions(info, depend)
 
-    //data
 
-    //method
-
-    const onFinishFailed = (errorInfo) => {
-      console.log("Failed:", errorInfo);
-    };
-
-    //return
     return {
       sesInfo,
+
       postSes,
-      onFinishFailed,
-      logout,
-      options1,
+      adminLogout,
+
+      positionOptions,
       dateFormat,
-    };
+    }
   },
-});
+})
 </script>
 
 <style scoped>
-@import "../assets/css/stylesheet.css";
-
-.ant-form {
-  width: calc(50vw);
-}
-
-.ant-space {
-  width: 100%;
-}
+@import "../assets/css/stylesheet.css"
 </style>
