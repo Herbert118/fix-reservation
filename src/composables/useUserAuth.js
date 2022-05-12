@@ -64,7 +64,7 @@ export default function useUserAuth(info, depend) {
           router.push("/user/makeRsv")
         })
         .catch((e) => {
-          message.warn("error:user Auth fail")
+          message.warn("用户鉴权失败")
           console.warn(e)
         })
 

@@ -166,6 +166,31 @@ export default function useReservations(info, depend) {
         message.warn("cancel fail")
       })
   }
+  const deleteRsv = (rsvID) => {
+    const url = baseUrl + "/api/rsv"
+    axios
+      .delete(url, {
+        headers: {
+          Authorization: `${token}`,
+        },
+        data: {
+          rsvID,
+        },
+      })
+      .then((res) => {
+        if (res.data.msg === "success") {
+          message.info("撤销成功")
+          getSes()
+          getRsvBySes()
+        } else {
+          message.warn("撤销失败")
+        }
+      })
+      .catch((e) => {
+        console.log(e)
+        message.warn("cancel fail")
+      })
+  }
 
   return {
     ifAlreadyRsv,
@@ -175,6 +200,7 @@ export default function useReservations(info, depend) {
     infoText,
     getRsvByEmail,
     cancelRsv,
+    deleteRsv,
     submitRsv,
     getRsvBySes,
     reserve

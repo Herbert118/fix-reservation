@@ -8,7 +8,7 @@
         <a-table :dataSource="reservations" :columns="rsvColumns">
             <template #bodyCell="{ column, record }">
                 <template v-if="column.title == 'operation'">
-                    <a-popconfirm v-if="sessions.length" title="确定撤销吗?" @confirm="cancelRsv(record.id)">
+                    <a-popconfirm v-if="reservations.length" title="确定撤销吗?" @confirm="deleteRsv(record.id)">
                         <a-button type="">撤销</a-button>
                     </a-popconfirm>
                 </template>
@@ -22,23 +22,26 @@ import { defineComponent, onMounted } from 'vue'
 import useReservations from "../composables/useReservations"
 import { message } from 'ant-design-vue'
 import useAdminAuth from '@/composables/useAdminAuth'
+import useSessions from '@/composables/useSessions'
 
 export default defineComponent({
     setup() {
         const { adminToken, adminLogout } = useAdminAuth({}, { message })
         const token = adminToken
-        
+        const logout = adminLogout
+
+        const {getSes} = useSessions({token},{logout,message})
         const { reservations,
             rsvColumns,
-            cancelRsv,
-            getRsvBySes } = useReservations({ token }, { message, undefined })
+            deleteRsv,
+            getRsvBySes } = useReservations({ token }, { message, getSes, logout })
 
         onMounted(getRsvBySes)
 
         return {
             reservations,
             rsvColumns,
-            cancelRsv,
+           deleteRsv,
             adminLogout
 
         }
